@@ -1,0 +1,3149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e8d256cc7e2c7f23dd3e17af02d31e33 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="
+        position: fixed;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        background: rgba(255,255,255,0.93);
+        padding: 8px 14px;
+        border: 1px solid #d0d0d0;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        font-weight: 700;
+        box-shadow: 0 1px 8px rgba(0,0,0,0.14);
+    ">Final k=2 compact5 clusters</div>
+    
+    
+            <div class="folium-map" id="map_e8d256cc7e2c7f23dd3e17af02d31e33" ></div>
+        
+    
+    <div style="
+        position: fixed;
+        bottom: 28px;
+        left: 28px;
+        z-index: 9999;
+        background: rgba(255,255,255,0.94);
+        padding: 12px 14px;
+        border: 1px solid #cfcfcf;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        max-width: 320px;
+        box-shadow: 0 1px 8px rgba(0,0,0,0.18);
+    ">
+      <div style="font-weight:700; margin-bottom:6px;">Final k=2 compact5 clusters</div>
+      
+        <div style="display:flex; align-items:center; margin:4px 0;">
+          <span style="background:#4C78A8; width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:8px;"></span>
+          <span>broad mixed / regular-use (n=82)</span>
+        </div>
+        
+
+        <div style="display:flex; align-items:center; margin:4px 0;">
+          <span style="background:#F58518; width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:8px;"></span>
+          <span>strongly seasonal / recreational-like (n=7)</span>
+        </div>
+        
+      <div style="margin-top:8px; color:#555; line-height:1.3;">
+        Coordinates are shown for interpretation only; they were not used as clustering features.
+      </div>
+    </div>
+    
+</body>
+<script>
+    
+    
+            var map_e8d256cc7e2c7f23dd3e17af02d31e33 = L.map(
+                "map_e8d256cc7e2c7f23dd3e17af02d31e33",
+                {
+                    center: [51.00882798639953, 4.382632445829668],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 8,
+  "zoomControl": true,
+  "preferCanvas": true,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+
+            
+
+        
+    
+            var tile_layer_d437be072bc6d284a98bb1bbf4706016 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d437be072bc6d284a98bb1bbf4706016.addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+            var tile_layer_42960b7b21699ea2d4eb7db647f3d754 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_42960b7b21699ea2d4eb7db647f3d754.addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+            var tile_layer_69a7f511b5f0b68a82af8f295182aeff = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_69a7f511b5f0b68a82af8f295182aeff.addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+            var circle_marker_7513586a6d57d3738d34187ebeb93cee = L.circleMarker(
+                [50.91618331151478, 4.456121776137429],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_3754195a10d21b9673cefca2d9d35c2f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_e6af698b4f95645a5248ee2c1c793d65 = $(`<div id="html_e6af698b4f95645a5248ee2c1c793d65" style="width: 100.0%; height: 100.0%;">             <b>LG0001</b><br>             Gemeente: Machelen<br>             Site IDs: 1<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.584<br>             log weekend/weekday: -0.473<br>             weekday commute peak share: 0.385<br>             weekday midday share: 0.219<br>             weekend midday/afternoon share: 0.451             </div>`)[0];
+                popup_3754195a10d21b9673cefca2d9d35c2f.setContent(html_e6af698b4f95645a5248ee2c1c793d65);
+            
+        
+
+        circle_marker_7513586a6d57d3738d34187ebeb93cee.bindPopup(popup_3754195a10d21b9673cefca2d9d35c2f)
+        ;
+
+        
+    
+    
+            circle_marker_7513586a6d57d3738d34187ebeb93cee.bindTooltip(
+                `<div>
+                     LG0001: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_16acda8ceaa20fe5e7eff674e22d3a47 = L.circleMarker(
+                [51.275075, 4.4719549999999995],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_e7fa036a881d78efe0a3487df9d10b51 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_cc29bdbac0f4635ae5d6af792e21985c = $(`<div id="html_cc29bdbac0f4635ae5d6af792e21985c" style="width: 100.0%; height: 100.0%;">             <b>LG0002</b><br>             Gemeente: Brasschaat<br>             Site IDs: 2|3<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.245<br>             log weekend/weekday: -0.700<br>             weekday commute peak share: 0.415<br>             weekday midday share: 0.245<br>             weekend midday/afternoon share: 0.481             </div>`)[0];
+                popup_e7fa036a881d78efe0a3487df9d10b51.setContent(html_cc29bdbac0f4635ae5d6af792e21985c);
+            
+        
+
+        circle_marker_16acda8ceaa20fe5e7eff674e22d3a47.bindPopup(popup_e7fa036a881d78efe0a3487df9d10b51)
+        ;
+
+        
+    
+    
+            circle_marker_16acda8ceaa20fe5e7eff674e22d3a47.bindTooltip(
+                `<div>
+                     LG0002: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cef18ee75d1af2b580f9815da3aefed3 = L.circleMarker(
+                [51.160205, 5.19007],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_4e34e93eb5c940f961f8d7e1d2f1549a = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_73e941464714731bb776ac7a15d5baa7 = $(`<div id="html_73e941464714731bb776ac7a15d5baa7" style="width: 100.0%; height: 100.0%;">             <b>LG0003</b><br>             Gemeente: Balen<br>             Site IDs: 4|5<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.804<br>             log weekend/weekday: -0.198<br>             weekday commute peak share: 0.345<br>             weekday midday share: 0.277<br>             weekend midday/afternoon share: 0.508             </div>`)[0];
+                popup_4e34e93eb5c940f961f8d7e1d2f1549a.setContent(html_73e941464714731bb776ac7a15d5baa7);
+            
+        
+
+        circle_marker_cef18ee75d1af2b580f9815da3aefed3.bindPopup(popup_4e34e93eb5c940f961f8d7e1d2f1549a)
+        ;
+
+        
+    
+    
+            circle_marker_cef18ee75d1af2b580f9815da3aefed3.bindTooltip(
+                `<div>
+                     LG0003: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fd8f626b448c3cfb67c8cd211311713b = L.circleMarker(
+                [51.10892, 3.703075],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_73df9a284f7859fe84dad7f16c26de11 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_4b77ff1f93b52ea2408e82cb18dcf685 = $(`<div id="html_4b77ff1f93b52ea2408e82cb18dcf685" style="width: 100.0%; height: 100.0%;">             <b>LG0004</b><br>             Gemeente: Evergem<br>             Site IDs: 6|7<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.321<br>             log weekend/weekday: -0.896<br>             weekday commute peak share: 0.413<br>             weekday midday share: 0.228<br>             weekend midday/afternoon share: 0.433             </div>`)[0];
+                popup_73df9a284f7859fe84dad7f16c26de11.setContent(html_4b77ff1f93b52ea2408e82cb18dcf685);
+            
+        
+
+        circle_marker_fd8f626b448c3cfb67c8cd211311713b.bindPopup(popup_73df9a284f7859fe84dad7f16c26de11)
+        ;
+
+        
+    
+    
+            circle_marker_fd8f626b448c3cfb67c8cd211311713b.bindTooltip(
+                `<div>
+                     LG0004: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5bb2e4d583f91c5d585f74936e9a4c8f = L.circleMarker(
+                [51.06759, 4.68823],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_75c347afd6c6743a5a9d45fcf33a10bd = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_3528d66250f27ef5f36f17b73b102f2a = $(`<div id="html_3528d66250f27ef5f36f17b73b102f2a" style="width: 100.0%; height: 100.0%;">             <b>LG0005</b><br>             Gemeente: Heist-op-den-Berg<br>             Site IDs: 8<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.357<br>             log weekend/weekday: -0.709<br>             weekday commute peak share: 0.465<br>             weekday midday share: 0.227<br>             weekend midday/afternoon share: 0.438             </div>`)[0];
+                popup_75c347afd6c6743a5a9d45fcf33a10bd.setContent(html_3528d66250f27ef5f36f17b73b102f2a);
+            
+        
+
+        circle_marker_5bb2e4d583f91c5d585f74936e9a4c8f.bindPopup(popup_75c347afd6c6743a5a9d45fcf33a10bd)
+        ;
+
+        
+    
+    
+            circle_marker_5bb2e4d583f91c5d585f74936e9a4c8f.bindTooltip(
+                `<div>
+                     LG0005: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4d999ee636d2f7d9921f3c24083ffd76 = L.circleMarker(
+                [51.06904, 4.69524],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_8cf8aa92980b9015da2ce505d5285f18 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c9e74e2a5341533c0b140407124d1cbb = $(`<div id="html_c9e74e2a5341533c0b140407124d1cbb" style="width: 100.0%; height: 100.0%;">             <b>LG0006</b><br>             Gemeente: Heist-op-den-Berg<br>             Site IDs: 9<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.379<br>             log weekend/weekday: -0.666<br>             weekday commute peak share: 0.341<br>             weekday midday share: 0.286<br>             weekend midday/afternoon share: 0.445             </div>`)[0];
+                popup_8cf8aa92980b9015da2ce505d5285f18.setContent(html_c9e74e2a5341533c0b140407124d1cbb);
+            
+        
+
+        circle_marker_4d999ee636d2f7d9921f3c24083ffd76.bindPopup(popup_8cf8aa92980b9015da2ce505d5285f18)
+        ;
+
+        
+    
+    
+            circle_marker_4d999ee636d2f7d9921f3c24083ffd76.bindTooltip(
+                `<div>
+                     LG0006: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2ca599db6277054da429df97402d5bbe = L.circleMarker(
+                [50.93549, 4.01571],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_b36904b07fd543472016ab418144e38c = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5c7cc97ace8abe35abfe5b010bcecb87 = $(`<div id="html_5c7cc97ace8abe35abfe5b010bcecb87" style="width: 100.0%; height: 100.0%;">             <b>LG0007</b><br>             Gemeente: Aalst<br>             Site IDs: 10<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.649<br>             log weekend/weekday: -0.390<br>             weekday commute peak share: 0.408<br>             weekday midday share: 0.266<br>             weekend midday/afternoon share: 0.503             </div>`)[0];
+                popup_b36904b07fd543472016ab418144e38c.setContent(html_5c7cc97ace8abe35abfe5b010bcecb87);
+            
+        
+
+        circle_marker_2ca599db6277054da429df97402d5bbe.bindPopup(popup_b36904b07fd543472016ab418144e38c)
+        ;
+
+        
+    
+    
+            circle_marker_2ca599db6277054da429df97402d5bbe.bindTooltip(
+                `<div>
+                     LG0007: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7d678462f1f520dbfcbe22b59b3300c8 = L.circleMarker(
+                [50.93385, 4.01647],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_848cec4ea8f2bc2cc1d10057d0c6b78b = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_8783882d5a4f1d70d706fdf48c80e7e4 = $(`<div id="html_8783882d5a4f1d70d706fdf48c80e7e4" style="width: 100.0%; height: 100.0%;">             <b>LG0008</b><br>             Gemeente: Aalst<br>             Site IDs: 11<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.657<br>             log weekend/weekday: -0.397<br>             weekday commute peak share: 0.414<br>             weekday midday share: 0.278<br>             weekend midday/afternoon share: 0.525             </div>`)[0];
+                popup_848cec4ea8f2bc2cc1d10057d0c6b78b.setContent(html_8783882d5a4f1d70d706fdf48c80e7e4);
+            
+        
+
+        circle_marker_7d678462f1f520dbfcbe22b59b3300c8.bindPopup(popup_848cec4ea8f2bc2cc1d10057d0c6b78b)
+        ;
+
+        
+    
+    
+            circle_marker_7d678462f1f520dbfcbe22b59b3300c8.bindTooltip(
+                `<div>
+                     LG0008: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6efeea140d962365e23d1615a0697137 = L.circleMarker(
+                [50.81896, 4.47803],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_37b714257a7e48f47db94b9562bf4fd0 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_d56e36e9203d629b686d35e16c0f766c = $(`<div id="html_d56e36e9203d629b686d35e16c0f766c" style="width: 100.0%; height: 100.0%;">             <b>LG0009</b><br>             Gemeente: Kraainem<br>             Site IDs: 12<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.886<br>             log weekend/weekday: 0.079<br>             weekday commute peak share: 0.416<br>             weekday midday share: 0.225<br>             weekend midday/afternoon share: 0.616             </div>`)[0];
+                popup_37b714257a7e48f47db94b9562bf4fd0.setContent(html_d56e36e9203d629b686d35e16c0f766c);
+            
+        
+
+        circle_marker_6efeea140d962365e23d1615a0697137.bindPopup(popup_37b714257a7e48f47db94b9562bf4fd0)
+        ;
+
+        
+    
+    
+            circle_marker_6efeea140d962365e23d1615a0697137.bindTooltip(
+                `<div>
+                     LG0009: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e9e261a52171c58d0e5fc273478f2d17 = L.circleMarker(
+                [51.03018, 3.70146],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d7d103a0fd1ddc2459b6523830ee0867 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_300975e1ac4a3e454005c2bd1c98d021 = $(`<div id="html_300975e1ac4a3e454005c2bd1c98d021" style="width: 100.0%; height: 100.0%;">             <b>LG0010</b><br>             Gemeente: Gent<br>             Site IDs: 13<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.373<br>             log weekend/weekday: -0.756<br>             weekday commute peak share: 0.459<br>             weekday midday share: 0.221<br>             weekend midday/afternoon share: 0.488             </div>`)[0];
+                popup_d7d103a0fd1ddc2459b6523830ee0867.setContent(html_300975e1ac4a3e454005c2bd1c98d021);
+            
+        
+
+        circle_marker_e9e261a52171c58d0e5fc273478f2d17.bindPopup(popup_d7d103a0fd1ddc2459b6523830ee0867)
+        ;
+
+        
+    
+    
+            circle_marker_e9e261a52171c58d0e5fc273478f2d17.bindTooltip(
+                `<div>
+                     LG0010: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9ffac6df7ff693c95b76cdb6ec659943 = L.circleMarker(
+                [50.97172, 5.48927],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_6523346e16a82f4a7605850fb6de737d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5c60fa0be30e57caac7888a22faa7fa2 = $(`<div id="html_5c60fa0be30e57caac7888a22faa7fa2" style="width: 100.0%; height: 100.0%;">             <b>LG0011</b><br>             Gemeente: Genk<br>             Site IDs: 14<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.851<br>             log weekend/weekday: -0.032<br>             weekday commute peak share: 0.301<br>             weekday midday share: 0.331<br>             weekend midday/afternoon share: 0.490             </div>`)[0];
+                popup_6523346e16a82f4a7605850fb6de737d.setContent(html_5c60fa0be30e57caac7888a22faa7fa2);
+            
+        
+
+        circle_marker_9ffac6df7ff693c95b76cdb6ec659943.bindPopup(popup_6523346e16a82f4a7605850fb6de737d)
+        ;
+
+        
+    
+    
+            circle_marker_9ffac6df7ff693c95b76cdb6ec659943.bindTooltip(
+                `<div>
+                     LG0011: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_381d06d1857becab0f811c5b6ce7f183 = L.circleMarker(
+                [51.213745, 2.92754],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_9fa390ee357cfdf111985f14475911ee = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_b57061447bf8bd48d499afd027b29fe1 = $(`<div id="html_b57061447bf8bd48d499afd027b29fe1" style="width: 100.0%; height: 100.0%;">             <b>LG0012</b><br>             Gemeente: Oostende<br>             Site IDs: 15|18<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.536<br>             log weekend/weekday: -0.418<br>             weekday commute peak share: 0.376<br>             weekday midday share: 0.286<br>             weekend midday/afternoon share: 0.453             </div>`)[0];
+                popup_9fa390ee357cfdf111985f14475911ee.setContent(html_b57061447bf8bd48d499afd027b29fe1);
+            
+        
+
+        circle_marker_381d06d1857becab0f811c5b6ce7f183.bindPopup(popup_9fa390ee357cfdf111985f14475911ee)
+        ;
+
+        
+    
+    
+            circle_marker_381d06d1857becab0f811c5b6ce7f183.bindTooltip(
+                `<div>
+                     LG0012: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_782c599088165156e784341eb7e8ac2f = L.circleMarker(
+                [50.833355, 3.27775],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_403254694a52151ae21f00f50a68ec4b = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_07064a5630fd0d5e85b65a668f0677da = $(`<div id="html_07064a5630fd0d5e85b65a668f0677da" style="width: 100.0%; height: 100.0%;">             <b>LG0013</b><br>             Gemeente: Kortrijk<br>             Site IDs: 16|17<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.199<br>             log weekend/weekday: -0.452<br>             weekday commute peak share: 0.362<br>             weekday midday share: 0.285<br>             weekend midday/afternoon share: 0.425             </div>`)[0];
+                popup_403254694a52151ae21f00f50a68ec4b.setContent(html_07064a5630fd0d5e85b65a668f0677da);
+            
+        
+
+        circle_marker_782c599088165156e784341eb7e8ac2f.bindPopup(popup_403254694a52151ae21f00f50a68ec4b)
+        ;
+
+        
+    
+    
+            circle_marker_782c599088165156e784341eb7e8ac2f.bindTooltip(
+                `<div>
+                     LG0013: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8574bc2f4ba0ea95fc504aecef2a8bf2 = L.circleMarker(
+                [50.93433, 4.01471],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_eb3c4e66c5aad9e340da2e37592c6b8a = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_10690777cc7222978f4bec6a74e4d131 = $(`<div id="html_10690777cc7222978f4bec6a74e4d131" style="width: 100.0%; height: 100.0%;">             <b>LG0014</b><br>             Gemeente: Aalst<br>             Site IDs: 19<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.634<br>             log weekend/weekday: -0.354<br>             weekday commute peak share: 0.417<br>             weekday midday share: 0.270<br>             weekend midday/afternoon share: 0.505             </div>`)[0];
+                popup_eb3c4e66c5aad9e340da2e37592c6b8a.setContent(html_10690777cc7222978f4bec6a74e4d131);
+            
+        
+
+        circle_marker_8574bc2f4ba0ea95fc504aecef2a8bf2.bindPopup(popup_eb3c4e66c5aad9e340da2e37592c6b8a)
+        ;
+
+        
+    
+    
+            circle_marker_8574bc2f4ba0ea95fc504aecef2a8bf2.bindTooltip(
+                `<div>
+                     LG0014: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1c61f85a91eaaa8420bcc97d4ce2f1d8 = L.circleMarker(
+                [51.17416, 3.20048],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_66afc5164b50d924e8a74377b3e6d471 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_190562af9b5b5b764f4b6a4e0e458049 = $(`<div id="html_190562af9b5b5b764f4b6a4e0e458049" style="width: 100.0%; height: 100.0%;">             <b>LG0015</b><br>             Gemeente: Brugge<br>             Site IDs: 20<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.397<br>             log weekend/weekday: -0.420<br>             weekday commute peak share: 0.456<br>             weekday midday share: 0.227<br>             weekend midday/afternoon share: 0.419             </div>`)[0];
+                popup_66afc5164b50d924e8a74377b3e6d471.setContent(html_190562af9b5b5b764f4b6a4e0e458049);
+            
+        
+
+        circle_marker_1c61f85a91eaaa8420bcc97d4ce2f1d8.bindPopup(popup_66afc5164b50d924e8a74377b3e6d471)
+        ;
+
+        
+    
+    
+            circle_marker_1c61f85a91eaaa8420bcc97d4ce2f1d8.bindTooltip(
+                `<div>
+                     LG0015: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e2f61f5cc347514b905e1576d366b434 = L.circleMarker(
+                [50.86015, 5.50161],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_432e9c257b94204fa98656a19eb022e4 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9bf612456df7756c7c15be5d768c7f48 = $(`<div id="html_9bf612456df7756c7c15be5d768c7f48" style="width: 100.0%; height: 100.0%;">             <b>LG0016</b><br>             Gemeente: Bilzen<br>             Site IDs: 21<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.716<br>             log weekend/weekday: -0.477<br>             weekday commute peak share: 0.333<br>             weekday midday share: 0.315<br>             weekend midday/afternoon share: 0.500             </div>`)[0];
+                popup_432e9c257b94204fa98656a19eb022e4.setContent(html_9bf612456df7756c7c15be5d768c7f48);
+            
+        
+
+        circle_marker_e2f61f5cc347514b905e1576d366b434.bindPopup(popup_432e9c257b94204fa98656a19eb022e4)
+        ;
+
+        
+    
+    
+            circle_marker_e2f61f5cc347514b905e1576d366b434.bindTooltip(
+                `<div>
+                     LG0016: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c1f19f939ee69c5841422e3e8b64377e = L.circleMarker(
+                [50.81330800184882, 4.935984252796022],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d73a4f0ad25b9829460cc8a0bd2b80ec = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_3633d4659d144aa8cdd8117d37887b4b = $(`<div id="html_3633d4659d144aa8cdd8117d37887b4b" style="width: 100.0%; height: 100.0%;">             <b>LG0017</b><br>             Gemeente: Tienen<br>             Site IDs: 22<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.596<br>             log weekend/weekday: -0.484<br>             weekday commute peak share: 0.342<br>             weekday midday share: 0.302<br>             weekend midday/afternoon share: 0.493             </div>`)[0];
+                popup_d73a4f0ad25b9829460cc8a0bd2b80ec.setContent(html_3633d4659d144aa8cdd8117d37887b4b);
+            
+        
+
+        circle_marker_c1f19f939ee69c5841422e3e8b64377e.bindPopup(popup_d73a4f0ad25b9829460cc8a0bd2b80ec)
+        ;
+
+        
+    
+    
+            circle_marker_c1f19f939ee69c5841422e3e8b64377e.bindTooltip(
+                `<div>
+                     LG0017: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bae43119fca741ba25e567d2c29fe9b4 = L.circleMarker(
+                [50.8133097745943, 4.934757126302708],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_19f34eac808624769ef6f3d30db4d195 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_96ed7a3b9865a5e102dda323474bf1e4 = $(`<div id="html_96ed7a3b9865a5e102dda323474bf1e4" style="width: 100.0%; height: 100.0%;">             <b>LG0018</b><br>             Gemeente: Tienen<br>             Site IDs: 23|24<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.421<br>             log weekend/weekday: -0.501<br>             weekday commute peak share: 0.333<br>             weekday midday share: 0.285<br>             weekend midday/afternoon share: 0.482             </div>`)[0];
+                popup_19f34eac808624769ef6f3d30db4d195.setContent(html_96ed7a3b9865a5e102dda323474bf1e4);
+            
+        
+
+        circle_marker_bae43119fca741ba25e567d2c29fe9b4.bindPopup(popup_19f34eac808624769ef6f3d30db4d195)
+        ;
+
+        
+    
+    
+            circle_marker_bae43119fca741ba25e567d2c29fe9b4.bindTooltip(
+                `<div>
+                     LG0018: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_283f3efa7a9a90c29371cdc89f898d06 = L.circleMarker(
+                [51.13679500160176, 5.597669323604317],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_92e32d08abfc4018e189f3e7f38b3cae = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9a55b8fc9d83b94dc94b7d2bcb7084e8 = $(`<div id="html_9a55b8fc9d83b94dc94b7d2bcb7084e8" style="width: 100.0%; height: 100.0%;">             <b>LG0019</b><br>             Gemeente: Bree<br>             Site IDs: 25<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.462<br>             log weekend/weekday: -0.770<br>             weekday commute peak share: 0.337<br>             weekday midday share: 0.337<br>             weekend midday/afternoon share: 0.551             </div>`)[0];
+                popup_92e32d08abfc4018e189f3e7f38b3cae.setContent(html_9a55b8fc9d83b94dc94b7d2bcb7084e8);
+            
+        
+
+        circle_marker_283f3efa7a9a90c29371cdc89f898d06.bindPopup(popup_92e32d08abfc4018e189f3e7f38b3cae)
+        ;
+
+        
+    
+    
+            circle_marker_283f3efa7a9a90c29371cdc89f898d06.bindTooltip(
+                `<div>
+                     LG0019: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dec068ab8d62dd7e36306c5244430b46 = L.circleMarker(
+                [50.86995, 4.45444],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_243ce9329b5a88ce20166e2206b9f5aa = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c4fe2085cfc4f5d76b941b2a6e9cb9ac = $(`<div id="html_c4fe2085cfc4f5d76b941b2a6e9cb9ac" style="width: 100.0%; height: 100.0%;">             <b>LG0020</b><br>             Gemeente: Zaventem<br>             Site IDs: 26<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.665<br>             log weekend/weekday: -0.285<br>             weekday commute peak share: 0.437<br>             weekday midday share: 0.204<br>             weekend midday/afternoon share: 0.563             </div>`)[0];
+                popup_243ce9329b5a88ce20166e2206b9f5aa.setContent(html_c4fe2085cfc4f5d76b941b2a6e9cb9ac);
+            
+        
+
+        circle_marker_dec068ab8d62dd7e36306c5244430b46.bindPopup(popup_243ce9329b5a88ce20166e2206b9f5aa)
+        ;
+
+        
+    
+    
+            circle_marker_dec068ab8d62dd7e36306c5244430b46.bindTooltip(
+                `<div>
+                     LG0020: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8fd9652bcd6e06e8b629b13c5e1d4d2c = L.circleMarker(
+                [50.92127, 4.34013],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_97a992fde68acb25cf5de618d37c1e0d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_65662ac0d0673df8ddb6e6859c1b4f6f = $(`<div id="html_65662ac0d0673df8ddb6e6859c1b4f6f" style="width: 100.0%; height: 100.0%;">             <b>LG0021</b><br>             Gemeente: Meise<br>             Site IDs: 27<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.522<br>             log weekend/weekday: -0.526<br>             weekday commute peak share: 0.484<br>             weekday midday share: 0.203<br>             weekend midday/afternoon share: 0.504             </div>`)[0];
+                popup_97a992fde68acb25cf5de618d37c1e0d.setContent(html_65662ac0d0673df8ddb6e6859c1b4f6f);
+            
+        
+
+        circle_marker_8fd9652bcd6e06e8b629b13c5e1d4d2c.bindPopup(popup_97a992fde68acb25cf5de618d37c1e0d)
+        ;
+
+        
+    
+    
+            circle_marker_8fd9652bcd6e06e8b629b13c5e1d4d2c.bindTooltip(
+                `<div>
+                     LG0021: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8a1fa64f912415a59a25cea02a45f2d6 = L.circleMarker(
+                [50.75487, 5.30322],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_3d65f2f8a650e56ab113dd080c8564b7 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_887064ff1566f753dad84108897b4dc7 = $(`<div id="html_887064ff1566f753dad84108897b4dc7" style="width: 100.0%; height: 100.0%;">             <b>LG0022</b><br>             Gemeente: Heers<br>             Site IDs: 28|34<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.509<br>             log weekend/weekday: 0.451<br>             weekday commute peak share: 0.238<br>             weekday midday share: 0.442<br>             weekend midday/afternoon share: 0.619             </div>`)[0];
+                popup_3d65f2f8a650e56ab113dd080c8564b7.setContent(html_887064ff1566f753dad84108897b4dc7);
+            
+        
+
+        circle_marker_8a1fa64f912415a59a25cea02a45f2d6.bindPopup(popup_3d65f2f8a650e56ab113dd080c8564b7)
+        ;
+
+        
+    
+    
+            circle_marker_8a1fa64f912415a59a25cea02a45f2d6.bindTooltip(
+                `<div>
+                     LG0022: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_442600c64b0abb5fdc6170e27823809e = L.circleMarker(
+                [50.79286, 5.52825],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_a7a299d660f22bf32b5402cb09470056 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_a3ca7f382db859448896ae729a51c3e5 = $(`<div id="html_a3ca7f382db859448896ae729a51c3e5" style="width: 100.0%; height: 100.0%;">             <b>LG0023</b><br>             Gemeente: Tongeren<br>             Site IDs: 29<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.762<br>             log weekend/weekday: -0.673<br>             weekday commute peak share: 0.372<br>             weekday midday share: 0.271<br>             weekend midday/afternoon share: 0.539             </div>`)[0];
+                popup_a7a299d660f22bf32b5402cb09470056.setContent(html_a3ca7f382db859448896ae729a51c3e5);
+            
+        
+
+        circle_marker_442600c64b0abb5fdc6170e27823809e.bindPopup(popup_a7a299d660f22bf32b5402cb09470056)
+        ;
+
+        
+    
+    
+            circle_marker_442600c64b0abb5fdc6170e27823809e.bindTooltip(
+                `<div>
+                     LG0023: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f4efa22c140d0876c3f111ca449330f7 = L.circleMarker(
+                [50.9437, 5.177205000000001],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_b6c2adb49e75d7a7a61c5f2dca740400 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_86ffc9f109334fa25f801a46896c4495 = $(`<div id="html_86ffc9f109334fa25f801a46896c4495" style="width: 100.0%; height: 100.0%;">             <b>LG0024</b><br>             Gemeente: Herk-de-Stad<br>             Site IDs: 30|31<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.617<br>             log weekend/weekday: -0.395<br>             weekday commute peak share: 0.452<br>             weekday midday share: 0.281<br>             weekend midday/afternoon share: 0.504             </div>`)[0];
+                popup_b6c2adb49e75d7a7a61c5f2dca740400.setContent(html_86ffc9f109334fa25f801a46896c4495);
+            
+        
+
+        circle_marker_f4efa22c140d0876c3f111ca449330f7.bindPopup(popup_b6c2adb49e75d7a7a61c5f2dca740400)
+        ;
+
+        
+    
+    
+            circle_marker_f4efa22c140d0876c3f111ca449330f7.bindTooltip(
+                `<div>
+                     LG0024: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6a02aa403dd9efc088af7029363fd81d = L.circleMarker(
+                [50.979744999999994, 5.209485],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_01d2aed71a220dfbb9a5a8b32e9facd3 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9a012d8ec5e15c4b2d142881af4dceaf = $(`<div id="html_9a012d8ec5e15c4b2d142881af4dceaf" style="width: 100.0%; height: 100.0%;">             <b>LG0025</b><br>             Gemeente: Lummen<br>             Site IDs: 32|33<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.726<br>             log weekend/weekday: -0.332<br>             weekday commute peak share: 0.345<br>             weekday midday share: 0.298<br>             weekend midday/afternoon share: 0.537             </div>`)[0];
+                popup_01d2aed71a220dfbb9a5a8b32e9facd3.setContent(html_9a012d8ec5e15c4b2d142881af4dceaf);
+            
+        
+
+        circle_marker_6a02aa403dd9efc088af7029363fd81d.bindPopup(popup_01d2aed71a220dfbb9a5a8b32e9facd3)
+        ;
+
+        
+    
+    
+            circle_marker_6a02aa403dd9efc088af7029363fd81d.bindTooltip(
+                `<div>
+                     LG0025: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_09ba7bcecd18d37efc32ee16abd9f269 = L.circleMarker(
+                [50.881215, 5.63076],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_1a412990c3e03b5f805b868d32e328d3 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_bc5588e1305d95a863c31781171a5972 = $(`<div id="html_bc5588e1305d95a863c31781171a5972" style="width: 100.0%; height: 100.0%;">             <b>LG0026</b><br>             Gemeente: Lanaken<br>             Site IDs: 35|36<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.901<br>             log weekend/weekday: -0.195<br>             weekday commute peak share: 0.321<br>             weekday midday share: 0.340<br>             weekend midday/afternoon share: 0.557             </div>`)[0];
+                popup_1a412990c3e03b5f805b868d32e328d3.setContent(html_bc5588e1305d95a863c31781171a5972);
+            
+        
+
+        circle_marker_09ba7bcecd18d37efc32ee16abd9f269.bindPopup(popup_1a412990c3e03b5f805b868d32e328d3)
+        ;
+
+        
+    
+    
+            circle_marker_09ba7bcecd18d37efc32ee16abd9f269.bindTooltip(
+                `<div>
+                     LG0026: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fcedd015967279cd3c70b74fabf03129 = L.circleMarker(
+                [51.23288, 5.292],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_b069d38df6b977893f01cf83ccd962a2 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_041578c3b49a03c37b5fa21600a4dd10 = $(`<div id="html_041578c3b49a03c37b5fa21600a4dd10" style="width: 100.0%; height: 100.0%;">             <b>LG0027</b><br>             Gemeente: Lommel<br>             Site IDs: 37|38<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.752<br>             log weekend/weekday: -0.359<br>             weekday commute peak share: 0.302<br>             weekday midday share: 0.307<br>             weekend midday/afternoon share: 0.479             </div>`)[0];
+                popup_b069d38df6b977893f01cf83ccd962a2.setContent(html_041578c3b49a03c37b5fa21600a4dd10);
+            
+        
+
+        circle_marker_fcedd015967279cd3c70b74fabf03129.bindPopup(popup_b069d38df6b977893f01cf83ccd962a2)
+        ;
+
+        
+    
+    
+            circle_marker_fcedd015967279cd3c70b74fabf03129.bindTooltip(
+                `<div>
+                     LG0027: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_714b682d0e596cc997e7a440b9f4d240 = L.circleMarker(
+                [51.134315, 5.478545],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_85f840bef444c9d22e477ab8417d3828 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_7cf2a9df1302199604619a0f961a1411 = $(`<div id="html_7cf2a9df1302199604619a0f961a1411" style="width: 100.0%; height: 100.0%;">             <b>LG0028</b><br>             Gemeente: Peer<br>             Site IDs: 39|40<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 1.021<br>             log weekend/weekday: -0.284<br>             weekday commute peak share: 0.361<br>             weekday midday share: 0.290<br>             weekend midday/afternoon share: 0.569             </div>`)[0];
+                popup_85f840bef444c9d22e477ab8417d3828.setContent(html_7cf2a9df1302199604619a0f961a1411);
+            
+        
+
+        circle_marker_714b682d0e596cc997e7a440b9f4d240.bindPopup(popup_85f840bef444c9d22e477ab8417d3828)
+        ;
+
+        
+    
+    
+            circle_marker_714b682d0e596cc997e7a440b9f4d240.bindTooltip(
+                `<div>
+                     LG0028: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_958cdc35d97979892532cf4ae29245fd = L.circleMarker(
+                [50.97034, 5.6980450000000005],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_3b75354724c0559bdc7121c852f6712e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_60aab6c8f6c7830c1acf88e53fecdcb2 = $(`<div id="html_60aab6c8f6c7830c1acf88e53fecdcb2" style="width: 100.0%; height: 100.0%;">             <b>LG0029</b><br>             Gemeente: Maasmechelen<br>             Site IDs: 41|42<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.615<br>             log weekend/weekday: -0.436<br>             weekday commute peak share: 0.258<br>             weekday midday share: 0.337<br>             weekend midday/afternoon share: 0.494             </div>`)[0];
+                popup_3b75354724c0559bdc7121c852f6712e.setContent(html_60aab6c8f6c7830c1acf88e53fecdcb2);
+            
+        
+
+        circle_marker_958cdc35d97979892532cf4ae29245fd.bindPopup(popup_3b75354724c0559bdc7121c852f6712e)
+        ;
+
+        
+    
+    
+            circle_marker_958cdc35d97979892532cf4ae29245fd.bindTooltip(
+                `<div>
+                     LG0029: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_713f335f962c6ed9941167efe841fc95 = L.circleMarker(
+                [51.093515, 5.797205],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_76c1bc3df614150aa34a7d73dc8b0852 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_06188b23d32ca7495f71db13c95cf3c6 = $(`<div id="html_06188b23d32ca7495f71db13c95cf3c6" style="width: 100.0%; height: 100.0%;">             <b>LG0030</b><br>             Gemeente: Maaseik<br>             Site IDs: 43|44<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.145<br>             log weekend/weekday: 0.116<br>             weekday commute peak share: 0.320<br>             weekday midday share: 0.361<br>             weekend midday/afternoon share: 0.654             </div>`)[0];
+                popup_76c1bc3df614150aa34a7d73dc8b0852.setContent(html_06188b23d32ca7495f71db13c95cf3c6);
+            
+        
+
+        circle_marker_713f335f962c6ed9941167efe841fc95.bindPopup(popup_76c1bc3df614150aa34a7d73dc8b0852)
+        ;
+
+        
+    
+    
+            circle_marker_713f335f962c6ed9941167efe841fc95.bindTooltip(
+                `<div>
+                     LG0030: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f4f3c1ded19c86ce293d496b045ec04b = L.circleMarker(
+                [51.231135, 5.443759999999999],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_0c95845fda55426a5962920dba2a2719 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c03cf062b712bfe303bceacb0703dc7a = $(`<div id="html_c03cf062b712bfe303bceacb0703dc7a" style="width: 100.0%; height: 100.0%;">             <b>LG0031</b><br>             Gemeente: Pelt<br>             Site IDs: 45|46<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.587<br>             log weekend/weekday: -0.357<br>             weekday commute peak share: 0.340<br>             weekday midday share: 0.305<br>             weekend midday/afternoon share: 0.434             </div>`)[0];
+                popup_0c95845fda55426a5962920dba2a2719.setContent(html_c03cf062b712bfe303bceacb0703dc7a);
+            
+        
+
+        circle_marker_f4f3c1ded19c86ce293d496b045ec04b.bindPopup(popup_0c95845fda55426a5962920dba2a2719)
+        ;
+
+        
+    
+    
+            circle_marker_f4f3c1ded19c86ce293d496b045ec04b.bindTooltip(
+                `<div>
+                     LG0031: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4231b1ad9166d5dc06a118bb378c115d = L.circleMarker(
+                [50.91372, 4.41497],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_c2c39c1fa71c29572759f1503ef4e4e5 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_15f27842fba836b9ad6dea777e07c97f = $(`<div id="html_15f27842fba836b9ad6dea777e07c97f" style="width: 100.0%; height: 100.0%;">             <b>LG0032</b><br>             Gemeente: Vilvoorde<br>             Site IDs: 47<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.671<br>             log weekend/weekday: -0.438<br>             weekday commute peak share: 0.457<br>             weekday midday share: 0.184<br>             weekend midday/afternoon share: 0.552             </div>`)[0];
+                popup_c2c39c1fa71c29572759f1503ef4e4e5.setContent(html_15f27842fba836b9ad6dea777e07c97f);
+            
+        
+
+        circle_marker_4231b1ad9166d5dc06a118bb378c115d.bindPopup(popup_c2c39c1fa71c29572759f1503ef4e4e5)
+        ;
+
+        
+    
+    
+            circle_marker_4231b1ad9166d5dc06a118bb378c115d.bindTooltip(
+                `<div>
+                     LG0032: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e33957b9a3faded0509acf6fd09d19b2 = L.circleMarker(
+                [51.00509, 5.60389],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_312ab0e6bfb0c88cce8e4ec73b2a564e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5e2aad7df6d4e84b3ffb310e01724606 = $(`<div id="html_5e2aad7df6d4e84b3ffb310e01724606" style="width: 100.0%; height: 100.0%;">             <b>LG0033</b><br>             Gemeente: As<br>             Site IDs: 48<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.790<br>             log weekend/weekday: 0.440<br>             weekday commute peak share: 0.259<br>             weekday midday share: 0.454<br>             weekend midday/afternoon share: 0.664             </div>`)[0];
+                popup_312ab0e6bfb0c88cce8e4ec73b2a564e.setContent(html_5e2aad7df6d4e84b3ffb310e01724606);
+            
+        
+
+        circle_marker_e33957b9a3faded0509acf6fd09d19b2.bindPopup(popup_312ab0e6bfb0c88cce8e4ec73b2a564e)
+        ;
+
+        
+    
+    
+            circle_marker_e33957b9a3faded0509acf6fd09d19b2.bindTooltip(
+                `<div>
+                     LG0033: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a9e020bb65f502cdc5aa6a569393939b = L.circleMarker(
+                [50.95264, 5.41001],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_7ca2a5b9d1b4c13b0f51f421fc9f00c9 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5da823ffdcaab1b9cf0a6f851ef6c53b = $(`<div id="html_5da823ffdcaab1b9cf0a6f851ef6c53b" style="width: 100.0%; height: 100.0%;">             <b>LG0034</b><br>             Gemeente: Genk<br>             Site IDs: 49<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.812<br>             log weekend/weekday: -0.323<br>             weekday commute peak share: 0.369<br>             weekday midday share: 0.285<br>             weekend midday/afternoon share: 0.533             </div>`)[0];
+                popup_7ca2a5b9d1b4c13b0f51f421fc9f00c9.setContent(html_5da823ffdcaab1b9cf0a6f851ef6c53b);
+            
+        
+
+        circle_marker_a9e020bb65f502cdc5aa6a569393939b.bindPopup(popup_7ca2a5b9d1b4c13b0f51f421fc9f00c9)
+        ;
+
+        
+    
+    
+            circle_marker_a9e020bb65f502cdc5aa6a569393939b.bindTooltip(
+                `<div>
+                     LG0034: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_88d071272db4a3830b7301c1a03efbd1 = L.circleMarker(
+                [51.19286, 3.16252],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_c414a95cf9c1b40af64a79ac64dad92f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_fbc717d4447d462097dc3f0927f81b7b = $(`<div id="html_fbc717d4447d462097dc3f0927f81b7b" style="width: 100.0%; height: 100.0%;">             <b>LG0035</b><br>             Gemeente: Brugge<br>             Site IDs: 50|51<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.282<br>             log weekend/weekday: -0.271<br>             weekday commute peak share: 0.417<br>             weekday midday share: 0.247<br>             weekend midday/afternoon share: 0.440             </div>`)[0];
+                popup_c414a95cf9c1b40af64a79ac64dad92f.setContent(html_fbc717d4447d462097dc3f0927f81b7b);
+            
+        
+
+        circle_marker_88d071272db4a3830b7301c1a03efbd1.bindPopup(popup_c414a95cf9c1b40af64a79ac64dad92f)
+        ;
+
+        
+    
+    
+            circle_marker_88d071272db4a3830b7301c1a03efbd1.bindTooltip(
+                `<div>
+                     LG0035: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4723b377fbea8358eaa5cb0f1cc70b67 = L.circleMarker(
+                [51.23019, 3.22809],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_9853ac967fe06c7c6dd0a1f5be73c2ee = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c77adf17f05c126437cea7d854e6fce6 = $(`<div id="html_c77adf17f05c126437cea7d854e6fce6" style="width: 100.0%; height: 100.0%;">             <b>LG0037</b><br>             Gemeente: Brugge<br>             Site IDs: 53|54<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.558<br>             log weekend/weekday: -0.287<br>             weekday commute peak share: 0.424<br>             weekday midday share: 0.270<br>             weekend midday/afternoon share: 0.493             </div>`)[0];
+                popup_9853ac967fe06c7c6dd0a1f5be73c2ee.setContent(html_c77adf17f05c126437cea7d854e6fce6);
+            
+        
+
+        circle_marker_4723b377fbea8358eaa5cb0f1cc70b67.bindPopup(popup_9853ac967fe06c7c6dd0a1f5be73c2ee)
+        ;
+
+        
+    
+    
+            circle_marker_4723b377fbea8358eaa5cb0f1cc70b67.bindTooltip(
+                `<div>
+                     LG0037: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa822d71027fd13a1073654515b22ea0 = L.circleMarker(
+                [51.07154, 3.082525],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_c8c02707c8109328776615fd048ea803 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_28f99f152881ced1e22d9bc47e2bdae6 = $(`<div id="html_28f99f152881ced1e22d9bc47e2bdae6" style="width: 100.0%; height: 100.0%;">             <b>LG0038</b><br>             Gemeente: Torhout<br>             Site IDs: 55|56<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.549<br>             log weekend/weekday: -0.530<br>             weekday commute peak share: 0.415<br>             weekday midday share: 0.277<br>             weekend midday/afternoon share: 0.440             </div>`)[0];
+                popup_c8c02707c8109328776615fd048ea803.setContent(html_28f99f152881ced1e22d9bc47e2bdae6);
+            
+        
+
+        circle_marker_fa822d71027fd13a1073654515b22ea0.bindPopup(popup_c8c02707c8109328776615fd048ea803)
+        ;
+
+        
+    
+    
+            circle_marker_fa822d71027fd13a1073654515b22ea0.bindTooltip(
+                `<div>
+                     LG0038: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8629fcd01f971fe54248ab2e29e04698 = L.circleMarker(
+                [50.960385, 3.24481],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_8327750fcb954ec588f52e921986e955 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_6e35c0e777cd3b3832f597a9f67460f1 = $(`<div id="html_6e35c0e777cd3b3832f597a9f67460f1" style="width: 100.0%; height: 100.0%;">             <b>LG0039</b><br>             Gemeente: Meulebeke<br>             Site IDs: 57|58<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.717<br>             log weekend/weekday: -0.422<br>             weekday commute peak share: 0.406<br>             weekday midday share: 0.240<br>             weekend midday/afternoon share: 0.460             </div>`)[0];
+                popup_8327750fcb954ec588f52e921986e955.setContent(html_6e35c0e777cd3b3832f597a9f67460f1);
+            
+        
+
+        circle_marker_8629fcd01f971fe54248ab2e29e04698.bindPopup(popup_8327750fcb954ec588f52e921986e955)
+        ;
+
+        
+    
+    
+            circle_marker_8629fcd01f971fe54248ab2e29e04698.bindTooltip(
+                `<div>
+                     LG0039: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5d4a6246247fef71bab1ffd3dc6ccca7 = L.circleMarker(
+                [50.967835, 3.18445],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_51f9eee3a0b36360dca75288290e1301 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_573c57f7ddba28fbaeaa7cc7584e2f97 = $(`<div id="html_573c57f7ddba28fbaeaa7cc7584e2f97" style="width: 100.0%; height: 100.0%;">             <b>LG0040</b><br>             Gemeente: Ardooie<br>             Site IDs: 59|60<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.455<br>             log weekend/weekday: -0.858<br>             weekday commute peak share: 0.376<br>             weekday midday share: 0.255<br>             weekend midday/afternoon share: 0.415             </div>`)[0];
+                popup_51f9eee3a0b36360dca75288290e1301.setContent(html_573c57f7ddba28fbaeaa7cc7584e2f97);
+            
+        
+
+        circle_marker_5d4a6246247fef71bab1ffd3dc6ccca7.bindPopup(popup_51f9eee3a0b36360dca75288290e1301)
+        ;
+
+        
+    
+    
+            circle_marker_5d4a6246247fef71bab1ffd3dc6ccca7.bindTooltip(
+                `<div>
+                     LG0040: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2088d41ee26864e38fbd198af646e047 = L.circleMarker(
+                [50.805674999999994, 3.09182],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_6927b048c095c8bb8dd5c532009f27ee = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_d82eab6bd3ae4137cbc71d7ca9bd3bf8 = $(`<div id="html_d82eab6bd3ae4137cbc71d7ca9bd3bf8" style="width: 100.0%; height: 100.0%;">             <b>LG0041</b><br>             Gemeente: Wervik<br>             Site IDs: 61|62<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.355<br>             log weekend/weekday: -0.569<br>             weekday commute peak share: 0.444<br>             weekday midday share: 0.258<br>             weekend midday/afternoon share: 0.447             </div>`)[0];
+                popup_6927b048c095c8bb8dd5c532009f27ee.setContent(html_d82eab6bd3ae4137cbc71d7ca9bd3bf8);
+            
+        
+
+        circle_marker_2088d41ee26864e38fbd198af646e047.bindPopup(popup_6927b048c095c8bb8dd5c532009f27ee)
+        ;
+
+        
+    
+    
+            circle_marker_2088d41ee26864e38fbd198af646e047.bindTooltip(
+                `<div>
+                     LG0041: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a1f10fe64b268ba217e920f147e960e1 = L.circleMarker(
+                [51.134995, 2.74329],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_de9280a3bed7d0d812899c71f6eb882e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5d43f84b08a8c8e1dbbc8cd58eb0e82b = $(`<div id="html_5d43f84b08a8c8e1dbbc8cd58eb0e82b" style="width: 100.0%; height: 100.0%;">             <b>LG0042</b><br>             Gemeente: Nieuwpoort<br>             Site IDs: 63|66<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.746<br>             log weekend/weekday: 0.189<br>             weekday commute peak share: 0.256<br>             weekday midday share: 0.432<br>             weekend midday/afternoon share: 0.568             </div>`)[0];
+                popup_de9280a3bed7d0d812899c71f6eb882e.setContent(html_5d43f84b08a8c8e1dbbc8cd58eb0e82b);
+            
+        
+
+        circle_marker_a1f10fe64b268ba217e920f147e960e1.bindPopup(popup_de9280a3bed7d0d812899c71f6eb882e)
+        ;
+
+        
+    
+    
+            circle_marker_a1f10fe64b268ba217e920f147e960e1.bindTooltip(
+                `<div>
+                     LG0042: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c61ac1ab80364e13dd14d043ce24b26b = L.circleMarker(
+                [51.13359, 2.75737],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_da0ccbfcb07295cd44372268379c9a80 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_74b2ccd87ee753e59a639ac0bf9ea63b = $(`<div id="html_74b2ccd87ee753e59a639ac0bf9ea63b" style="width: 100.0%; height: 100.0%;">             <b>LG0043</b><br>             Gemeente: Nieuwpoort<br>             Site IDs: 64<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.922<br>             log weekend/weekday: 0.200<br>             weekday commute peak share: 0.272<br>             weekday midday share: 0.425<br>             weekend midday/afternoon share: 0.573             </div>`)[0];
+                popup_da0ccbfcb07295cd44372268379c9a80.setContent(html_74b2ccd87ee753e59a639ac0bf9ea63b);
+            
+        
+
+        circle_marker_c61ac1ab80364e13dd14d043ce24b26b.bindPopup(popup_da0ccbfcb07295cd44372268379c9a80)
+        ;
+
+        
+    
+    
+            circle_marker_c61ac1ab80364e13dd14d043ce24b26b.bindTooltip(
+                `<div>
+                     LG0043: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_46abc5c62914b16c444396040f009b49 = L.circleMarker(
+                [51.13435, 2.75511],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d448614aea277a2da4f0fdfcbee4a928 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5c8c58b9e610ccdbca49eb77c987b7b4 = $(`<div id="html_5c8c58b9e610ccdbca49eb77c987b7b4" style="width: 100.0%; height: 100.0%;">             <b>LG0044</b><br>             Gemeente: Nieuwpoort<br>             Site IDs: 65<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.350<br>             log weekend/weekday: 0.070<br>             weekday commute peak share: 0.321<br>             weekday midday share: 0.344<br>             weekend midday/afternoon share: 0.530             </div>`)[0];
+                popup_d448614aea277a2da4f0fdfcbee4a928.setContent(html_5c8c58b9e610ccdbca49eb77c987b7b4);
+            
+        
+
+        circle_marker_46abc5c62914b16c444396040f009b49.bindPopup(popup_d448614aea277a2da4f0fdfcbee4a928)
+        ;
+
+        
+    
+    
+            circle_marker_46abc5c62914b16c444396040f009b49.bindTooltip(
+                `<div>
+                     LG0044: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b505d9c9b4b07697fd61ef46b1c8e1cd = L.circleMarker(
+                [50.85025, 2.85616],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_46cf81b93b91459978d865488e68f853 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9bc39377c01380e55252505e34a15c83 = $(`<div id="html_9bc39377c01380e55252505e34a15c83" style="width: 100.0%; height: 100.0%;">             <b>LG0045</b><br>             Gemeente: Ieper<br>             Site IDs: 67|68<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.646<br>             log weekend/weekday: -0.555<br>             weekday commute peak share: 0.446<br>             weekday midday share: 0.239<br>             weekend midday/afternoon share: 0.454             </div>`)[0];
+                popup_46cf81b93b91459978d865488e68f853.setContent(html_9bc39377c01380e55252505e34a15c83);
+            
+        
+
+        circle_marker_b505d9c9b4b07697fd61ef46b1c8e1cd.bindPopup(popup_46cf81b93b91459978d865488e68f853)
+        ;
+
+        
+    
+    
+            circle_marker_b505d9c9b4b07697fd61ef46b1c8e1cd.bindTooltip(
+                `<div>
+                     LG0045: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b2479bdf1182d0ee5ef152cb743fdadf = L.circleMarker(
+                [50.95682, 4.59318],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_1c6d2011f7172bac3036092918047058 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_16d97e9079036e13169b85cba27d0f18 = $(`<div id="html_16d97e9079036e13169b85cba27d0f18" style="width: 100.0%; height: 100.0%;">             <b>LG0047</b><br>             Gemeente: Kampenhout<br>             Site IDs: 70<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.674<br>             log weekend/weekday: -0.263<br>             weekday commute peak share: 0.423<br>             weekday midday share: 0.227<br>             weekend midday/afternoon share: 0.530             </div>`)[0];
+                popup_1c6d2011f7172bac3036092918047058.setContent(html_16d97e9079036e13169b85cba27d0f18);
+            
+        
+
+        circle_marker_b2479bdf1182d0ee5ef152cb743fdadf.bindPopup(popup_1c6d2011f7172bac3036092918047058)
+        ;
+
+        
+    
+    
+            circle_marker_b2479bdf1182d0ee5ef152cb743fdadf.bindTooltip(
+                `<div>
+                     LG0047: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_67382ad03dc0fa37ca1e6e432cca4a6c = L.circleMarker(
+                [50.95589, 4.59164],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_361d190582bef31e96d10cf1bb29c5a8 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_38601b51c61f6c765e742bc2202f6a77 = $(`<div id="html_38601b51c61f6c765e742bc2202f6a77" style="width: 100.0%; height: 100.0%;">             <b>LG0048</b><br>             Gemeente: Kampenhout<br>             Site IDs: 71<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.676<br>             log weekend/weekday: -0.311<br>             weekday commute peak share: 0.396<br>             weekday midday share: 0.255<br>             weekend midday/afternoon share: 0.501             </div>`)[0];
+                popup_361d190582bef31e96d10cf1bb29c5a8.setContent(html_38601b51c61f6c765e742bc2202f6a77);
+            
+        
+
+        circle_marker_67382ad03dc0fa37ca1e6e432cca4a6c.bindPopup(popup_361d190582bef31e96d10cf1bb29c5a8)
+        ;
+
+        
+    
+    
+            circle_marker_67382ad03dc0fa37ca1e6e432cca4a6c.bindTooltip(
+                `<div>
+                     LG0048: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_767ffcfa1a8a5138a492acf9d793a01b = L.circleMarker(
+                [50.891315000000006, 4.64687],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_80a1f6464c3a8b7833fddc1a39f5b639 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_a03c6468fe43091c75fce2d80895d69a = $(`<div id="html_a03c6468fe43091c75fce2d80895d69a" style="width: 100.0%; height: 100.0%;">             <b>LG0049</b><br>             Gemeente: Herent<br>             Site IDs: 72|73<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.438<br>             log weekend/weekday: -0.635<br>             weekday commute peak share: 0.452<br>             weekday midday share: 0.208<br>             weekend midday/afternoon share: 0.480             </div>`)[0];
+                popup_80a1f6464c3a8b7833fddc1a39f5b639.setContent(html_a03c6468fe43091c75fce2d80895d69a);
+            
+        
+
+        circle_marker_767ffcfa1a8a5138a492acf9d793a01b.bindPopup(popup_80a1f6464c3a8b7833fddc1a39f5b639)
+        ;
+
+        
+    
+    
+            circle_marker_767ffcfa1a8a5138a492acf9d793a01b.bindTooltip(
+                `<div>
+                     LG0049: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b895a5b272d0bea6bc60aa78d0cec460 = L.circleMarker(
+                [50.81917, 3.257295],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_273198012a0ef480131377f2476c7abc = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ae4df12f47446d4b31f318e9aa648251 = $(`<div id="html_ae4df12f47446d4b31f318e9aa648251" style="width: 100.0%; height: 100.0%;">             <b>LG0050</b><br>             Gemeente: Kortrijk<br>             Site IDs: 74|75<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.189<br>             log weekend/weekday: -0.702<br>             weekday commute peak share: 0.417<br>             weekday midday share: 0.252<br>             weekend midday/afternoon share: 0.417             </div>`)[0];
+                popup_273198012a0ef480131377f2476c7abc.setContent(html_ae4df12f47446d4b31f318e9aa648251);
+            
+        
+
+        circle_marker_b895a5b272d0bea6bc60aa78d0cec460.bindPopup(popup_273198012a0ef480131377f2476c7abc)
+        ;
+
+        
+    
+    
+            circle_marker_b895a5b272d0bea6bc60aa78d0cec460.bindTooltip(
+                `<div>
+                     LG0050: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cf4ae6216fb2ca16aaea18ae439ed54d = L.circleMarker(
+                [50.84606, 4.69597],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d6fa0687cc39423eecd83e39021ffba2 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ea77d6038d935e4b3809d0ab3548f426 = $(`<div id="html_ea77d6038d935e4b3809d0ab3548f426" style="width: 100.0%; height: 100.0%;">             <b>LG0051</b><br>             Gemeente: Leuven<br>             Site IDs: 76<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.230<br>             log weekend/weekday: -0.388<br>             weekday commute peak share: 0.441<br>             weekday midday share: 0.257<br>             weekend midday/afternoon share: 0.491             </div>`)[0];
+                popup_d6fa0687cc39423eecd83e39021ffba2.setContent(html_ea77d6038d935e4b3809d0ab3548f426);
+            
+        
+
+        circle_marker_cf4ae6216fb2ca16aaea18ae439ed54d.bindPopup(popup_d6fa0687cc39423eecd83e39021ffba2)
+        ;
+
+        
+    
+    
+            circle_marker_cf4ae6216fb2ca16aaea18ae439ed54d.bindTooltip(
+                `<div>
+                     LG0051: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_af806662699785ff1a14e0a08b075d96 = L.circleMarker(
+                [50.8868972, 4.70837595],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_7104cd416d246b66bc3af148e3c40b0c = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_bacc6e62ec657696bac4b0160a6134a9 = $(`<div id="html_bacc6e62ec657696bac4b0160a6134a9" style="width: 100.0%; height: 100.0%;">             <b>LG0052</b><br>             Gemeente: Leuven<br>             Site IDs: 77|107<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.300<br>             log weekend/weekday: -0.425<br>             weekday commute peak share: 0.369<br>             weekday midday share: 0.235<br>             weekend midday/afternoon share: 0.478             </div>`)[0];
+                popup_7104cd416d246b66bc3af148e3c40b0c.setContent(html_bacc6e62ec657696bac4b0160a6134a9);
+            
+        
+
+        circle_marker_af806662699785ff1a14e0a08b075d96.bindPopup(popup_7104cd416d246b66bc3af148e3c40b0c)
+        ;
+
+        
+    
+    
+            circle_marker_af806662699785ff1a14e0a08b075d96.bindTooltip(
+                `<div>
+                     LG0052: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2fa5153fbefbf718b6765b2419a83242 = L.circleMarker(
+                [50.75836, 4.165285],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_f30c46f1a276c9b8d94bb99fee2fe3aa = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_b52008ee0fc47ea43d6e0074ecafcb2d = $(`<div id="html_b52008ee0fc47ea43d6e0074ecafcb2d" style="width: 100.0%; height: 100.0%;">             <b>LG0053</b><br>             Gemeente: Pepingen<br>             Site IDs: 78|79<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.743<br>             log weekend/weekday: -0.325<br>             weekday commute peak share: 0.436<br>             weekday midday share: 0.243<br>             weekend midday/afternoon share: 0.503             </div>`)[0];
+                popup_f30c46f1a276c9b8d94bb99fee2fe3aa.setContent(html_b52008ee0fc47ea43d6e0074ecafcb2d);
+            
+        
+
+        circle_marker_2fa5153fbefbf718b6765b2419a83242.bindPopup(popup_f30c46f1a276c9b8d94bb99fee2fe3aa)
+        ;
+
+        
+    
+    
+            circle_marker_2fa5153fbefbf718b6765b2419a83242.bindTooltip(
+                `<div>
+                     LG0053: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_11869c5825e8f6ebd37c3df42760e4b9 = L.circleMarker(
+                [50.914285, 4.295695],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_10eacd32cdd086c3962b92206734b766 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_4f138a001813d3a58e78c792286ec92b = $(`<div id="html_4f138a001813d3a58e78c792286ec92b" style="width: 100.0%; height: 100.0%;">             <b>LG0054</b><br>             Gemeente: Wemmel<br>             Site IDs: 80|81<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.683<br>             log weekend/weekday: -0.734<br>             weekday commute peak share: 0.486<br>             weekday midday share: 0.189<br>             weekend midday/afternoon share: 0.483             </div>`)[0];
+                popup_10eacd32cdd086c3962b92206734b766.setContent(html_4f138a001813d3a58e78c792286ec92b);
+            
+        
+
+        circle_marker_11869c5825e8f6ebd37c3df42760e4b9.bindPopup(popup_10eacd32cdd086c3962b92206734b766)
+        ;
+
+        
+    
+    
+            circle_marker_11869c5825e8f6ebd37c3df42760e4b9.bindTooltip(
+                `<div>
+                     LG0054: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_61b1ffb9734a20d1e6c246102aa68de0 = L.circleMarker(
+                [50.751515, 4.3332],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_a8ed114e29604702d186517eea3cebed = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_e9e4820b3898761e9f347d7fe04a9de6 = $(`<div id="html_e9e4820b3898761e9f347d7fe04a9de6" style="width: 100.0%; height: 100.0%;">             <b>LG0055</b><br>             Gemeente: Beersel<br>             Site IDs: 82|83<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.610<br>             log weekend/weekday: -0.196<br>             weekday commute peak share: 0.361<br>             weekday midday share: 0.245<br>             weekend midday/afternoon share: 0.465             </div>`)[0];
+                popup_a8ed114e29604702d186517eea3cebed.setContent(html_e9e4820b3898761e9f347d7fe04a9de6);
+            
+        
+
+        circle_marker_61b1ffb9734a20d1e6c246102aa68de0.bindPopup(popup_a8ed114e29604702d186517eea3cebed)
+        ;
+
+        
+    
+    
+            circle_marker_61b1ffb9734a20d1e6c246102aa68de0.bindTooltip(
+                `<div>
+                     LG0055: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_254ba960c4b677460615d9c6574e2e5f = L.circleMarker(
+                [50.91717, 3.18772],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_4d7e235e35dfd18615baa9d8213b3049 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_645e4f727f466aefd2d4d271513c39fc = $(`<div id="html_645e4f727f466aefd2d4d271513c39fc" style="width: 100.0%; height: 100.0%;">             <b>LG0056</b><br>             Gemeente: Izegem<br>             Site IDs: 84<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.613<br>             log weekend/weekday: -0.546<br>             weekday commute peak share: 0.425<br>             weekday midday share: 0.253<br>             weekend midday/afternoon share: 0.472             </div>`)[0];
+                popup_4d7e235e35dfd18615baa9d8213b3049.setContent(html_645e4f727f466aefd2d4d271513c39fc);
+            
+        
+
+        circle_marker_254ba960c4b677460615d9c6574e2e5f.bindPopup(popup_4d7e235e35dfd18615baa9d8213b3049)
+        ;
+
+        
+    
+    
+            circle_marker_254ba960c4b677460615d9c6574e2e5f.bindTooltip(
+                `<div>
+                     LG0056: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0c2a9b99b8d971a781278ec2cfacca35 = L.circleMarker(
+                [50.89621, 4.17294],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d9b81546ada0af8bf754db623bc9e10f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_876ac464b965b0df2e59225eae99af0a = $(`<div id="html_876ac464b965b0df2e59225eae99af0a" style="width: 100.0%; height: 100.0%;">             <b>LG0057</b><br>             Gemeente: Asse<br>             Site IDs: 85<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.715<br>             log weekend/weekday: -0.463<br>             weekday commute peak share: 0.405<br>             weekday midday share: 0.248<br>             weekend midday/afternoon share: 0.494             </div>`)[0];
+                popup_d9b81546ada0af8bf754db623bc9e10f.setContent(html_876ac464b965b0df2e59225eae99af0a);
+            
+        
+
+        circle_marker_0c2a9b99b8d971a781278ec2cfacca35.bindPopup(popup_d9b81546ada0af8bf754db623bc9e10f)
+        ;
+
+        
+    
+    
+            circle_marker_0c2a9b99b8d971a781278ec2cfacca35.bindTooltip(
+                `<div>
+                     LG0057: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1e67786259d7ff4555621964034aa478 = L.circleMarker(
+                [50.89132, 4.1709],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_f5119baf4f2ad1c49d71419998110320 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_204fb1f64b7970725edc580239dff6bb = $(`<div id="html_204fb1f64b7970725edc580239dff6bb" style="width: 100.0%; height: 100.0%;">             <b>LG0058</b><br>             Gemeente: Asse<br>             Site IDs: 86<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.468<br>             log weekend/weekday: -0.549<br>             weekday commute peak share: 0.423<br>             weekday midday share: 0.238<br>             weekend midday/afternoon share: 0.514             </div>`)[0];
+                popup_f5119baf4f2ad1c49d71419998110320.setContent(html_204fb1f64b7970725edc580239dff6bb);
+            
+        
+
+        circle_marker_1e67786259d7ff4555621964034aa478.bindPopup(popup_f5119baf4f2ad1c49d71419998110320)
+        ;
+
+        
+    
+    
+            circle_marker_1e67786259d7ff4555621964034aa478.bindTooltip(
+                `<div>
+                     LG0058: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6cf0e1b90931b4590ae105b77b29f15d = L.circleMarker(
+                [50.99084, 4.81259],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_7f063404da6a4314e179b1431e09905d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_605c8b997d7dd9eac4c3fbaf0f72c118 = $(`<div id="html_605c8b997d7dd9eac4c3fbaf0f72c118" style="width: 100.0%; height: 100.0%;">             <b>LG0059</b><br>             Gemeente: Aarschot<br>             Site IDs: 87<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.190<br>             log weekend/weekday: -0.659<br>             weekday commute peak share: 0.392<br>             weekday midday share: 0.255<br>             weekend midday/afternoon share: 0.489             </div>`)[0];
+                popup_7f063404da6a4314e179b1431e09905d.setContent(html_605c8b997d7dd9eac4c3fbaf0f72c118);
+            
+        
+
+        circle_marker_6cf0e1b90931b4590ae105b77b29f15d.bindPopup(popup_7f063404da6a4314e179b1431e09905d)
+        ;
+
+        
+    
+    
+            circle_marker_6cf0e1b90931b4590ae105b77b29f15d.bindTooltip(
+                `<div>
+                     LG0059: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_01996cd3dd72bdefae58534f1a994895 = L.circleMarker(
+                [51.081955, 4.913295],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_f27e505603fbfc04a52168228613177d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_fe608f42fc5a1dd822ca73c9856b48c1 = $(`<div id="html_fe608f42fc5a1dd822ca73c9856b48c1" style="width: 100.0%; height: 100.0%;">             <b>LG0060</b><br>             Gemeente: Westerlo<br>             Site IDs: 88|89<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.537<br>             log weekend/weekday: -0.196<br>             weekday commute peak share: 0.321<br>             weekday midday share: 0.348<br>             weekend midday/afternoon share: 0.543             </div>`)[0];
+                popup_f27e505603fbfc04a52168228613177d.setContent(html_fe608f42fc5a1dd822ca73c9856b48c1);
+            
+        
+
+        circle_marker_01996cd3dd72bdefae58534f1a994895.bindPopup(popup_f27e505603fbfc04a52168228613177d)
+        ;
+
+        
+    
+    
+            circle_marker_01996cd3dd72bdefae58534f1a994895.bindTooltip(
+                `<div>
+                     LG0060: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5a83dcae77739e9ea5bfbfe9c0333642 = L.circleMarker(
+                [51.357455, 4.62426],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_7feeeb5bc1bb7841222f38f43e66d900 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_31fb835df00163b0361c07b2dc93686c = $(`<div id="html_31fb835df00163b0361c07b2dc93686c" style="width: 100.0%; height: 100.0%;">             <b>LG0061</b><br>             Gemeente: Brecht<br>             Site IDs: 90|91<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.743<br>             log weekend/weekday: -0.292<br>             weekday commute peak share: 0.406<br>             weekday midday share: 0.277<br>             weekend midday/afternoon share: 0.548             </div>`)[0];
+                popup_7feeeb5bc1bb7841222f38f43e66d900.setContent(html_31fb835df00163b0361c07b2dc93686c);
+            
+        
+
+        circle_marker_5a83dcae77739e9ea5bfbfe9c0333642.bindPopup(popup_7feeeb5bc1bb7841222f38f43e66d900)
+        ;
+
+        
+    
+    
+            circle_marker_5a83dcae77739e9ea5bfbfe9c0333642.bindTooltip(
+                `<div>
+                     LG0061: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5cffed5c07728725619e11baead81bfc = L.circleMarker(
+                [51.149935, 4.6447400000000005],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_39a693b6fa5770298d74ec078bac85c8 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ea5d677a770c2288cf44e5492a8f1c40 = $(`<div id="html_ea5d677a770c2288cf44e5492a8f1c40" style="width: 100.0%; height: 100.0%;">             <b>LG0062</b><br>             Gemeente: Nijlen<br>             Site IDs: 92|93<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.580<br>             log weekend/weekday: -0.423<br>             weekday commute peak share: 0.356<br>             weekday midday share: 0.288<br>             weekend midday/afternoon share: 0.470             </div>`)[0];
+                popup_39a693b6fa5770298d74ec078bac85c8.setContent(html_ea5d677a770c2288cf44e5492a8f1c40);
+            
+        
+
+        circle_marker_5cffed5c07728725619e11baead81bfc.bindPopup(popup_39a693b6fa5770298d74ec078bac85c8)
+        ;
+
+        
+    
+    
+            circle_marker_5cffed5c07728725619e11baead81bfc.bindTooltip(
+                `<div>
+                     LG0062: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_28f051cb3d1410ce584dc9c45809bfa8 = L.circleMarker(
+                [51.1736963, 4.8123065],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_85b0242ef2291c4a88cc1a868bf4f39d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_94493e5c83060b05098721848d19ff32 = $(`<div id="html_94493e5c83060b05098721848d19ff32" style="width: 100.0%; height: 100.0%;">             <b>LG0063</b><br>             Gemeente: Herentals<br>             Site IDs: 94|110<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.624<br>             log weekend/weekday: -0.439<br>             weekday commute peak share: 0.324<br>             weekday midday share: 0.310<br>             weekend midday/afternoon share: 0.540             </div>`)[0];
+                popup_85b0242ef2291c4a88cc1a868bf4f39d.setContent(html_94493e5c83060b05098721848d19ff32);
+            
+        
+
+        circle_marker_28f051cb3d1410ce584dc9c45809bfa8.bindPopup(popup_85b0242ef2291c4a88cc1a868bf4f39d)
+        ;
+
+        
+    
+    
+            circle_marker_28f051cb3d1410ce584dc9c45809bfa8.bindTooltip(
+                `<div>
+                     LG0063: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_68a31858dba7ddc235b63c59c64403e1 = L.circleMarker(
+                [51.11696, 4.584405],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_c204048b8e754d3cbc2e8a802b78af40 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_8900588eb46e1d29c8bc3f4b612a7020 = $(`<div id="html_8900588eb46e1d29c8bc3f4b612a7020" style="width: 100.0%; height: 100.0%;">             <b>LG0064</b><br>             Gemeente: Lier<br>             Site IDs: 95|96<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.422<br>             log weekend/weekday: -0.669<br>             weekday commute peak share: 0.430<br>             weekday midday share: 0.219<br>             weekend midday/afternoon share: 0.464             </div>`)[0];
+                popup_c204048b8e754d3cbc2e8a802b78af40.setContent(html_8900588eb46e1d29c8bc3f4b612a7020);
+            
+        
+
+        circle_marker_68a31858dba7ddc235b63c59c64403e1.bindPopup(popup_c204048b8e754d3cbc2e8a802b78af40)
+        ;
+
+        
+    
+    
+            circle_marker_68a31858dba7ddc235b63c59c64403e1.bindTooltip(
+                `<div>
+                     LG0064: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5fade762a8e800c5b8824d200f93ed05 = L.circleMarker(
+                [51.148115, 4.996705],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_64015105972649ce7f1d2ff8dd21ea0e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_3e9da986cdfe36ee638e4b8a2e1010ae = $(`<div id="html_3e9da986cdfe36ee638e4b8a2e1010ae" style="width: 100.0%; height: 100.0%;">             <b>LG0065</b><br>             Gemeente: Geel<br>             Site IDs: 97|98<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.424<br>             log weekend/weekday: -0.675<br>             weekday commute peak share: 0.376<br>             weekday midday share: 0.264<br>             weekend midday/afternoon share: 0.446             </div>`)[0];
+                popup_64015105972649ce7f1d2ff8dd21ea0e.setContent(html_3e9da986cdfe36ee638e4b8a2e1010ae);
+            
+        
+
+        circle_marker_5fade762a8e800c5b8824d200f93ed05.bindPopup(popup_64015105972649ce7f1d2ff8dd21ea0e)
+        ;
+
+        
+    
+    
+            circle_marker_5fade762a8e800c5b8824d200f93ed05.bindTooltip(
+                `<div>
+                     LG0065: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b0785eccb3dd151a22894dd75cd2140b = L.circleMarker(
+                [51.04567, 4.468825],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_8979af7024439f01c8e70fe0c638d942 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_92a9d08d02567274a5bd9de95b928342 = $(`<div id="html_92a9d08d02567274a5bd9de95b928342" style="width: 100.0%; height: 100.0%;">             <b>LG0066</b><br>             Gemeente: Mechelen<br>             Site IDs: 99|100<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.302<br>             log weekend/weekday: -0.581<br>             weekday commute peak share: 0.381<br>             weekday midday share: 0.251<br>             weekend midday/afternoon share: 0.432             </div>`)[0];
+                popup_8979af7024439f01c8e70fe0c638d942.setContent(html_92a9d08d02567274a5bd9de95b928342);
+            
+        
+
+        circle_marker_b0785eccb3dd151a22894dd75cd2140b.bindPopup(popup_8979af7024439f01c8e70fe0c638d942)
+        ;
+
+        
+    
+    
+            circle_marker_b0785eccb3dd151a22894dd75cd2140b.bindTooltip(
+                `<div>
+                     LG0066: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_479357a2f8ee16ef49f84a96299f236c = L.circleMarker(
+                [50.977945, 5.044775],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_8501fef18769edafe6bcd1df589baafd = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_fa6ed2e0bf6ac7e89b5dd63077412ea0 = $(`<div id="html_fa6ed2e0bf6ac7e89b5dd63077412ea0" style="width: 100.0%; height: 100.0%;">             <b>LG0067</b><br>             Gemeente: Diest<br>             Site IDs: 101|102<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.581<br>             log weekend/weekday: -0.268<br>             weekday commute peak share: 0.271<br>             weekday midday share: 0.378<br>             weekend midday/afternoon share: 0.518             </div>`)[0];
+                popup_8501fef18769edafe6bcd1df589baafd.setContent(html_fa6ed2e0bf6ac7e89b5dd63077412ea0);
+            
+        
+
+        circle_marker_479357a2f8ee16ef49f84a96299f236c.bindPopup(popup_8501fef18769edafe6bcd1df589baafd)
+        ;
+
+        
+    
+    
+            circle_marker_479357a2f8ee16ef49f84a96299f236c.bindTooltip(
+                `<div>
+                     LG0067: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b1bfc336d2bd744038e55da7ff073cf2 = L.circleMarker(
+                [51.316815, 4.73862],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_83d014a5476dd938a23397d7acb7267d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_6e82c89a01a959aaad79d8629db1b5f5 = $(`<div id="html_6e82c89a01a959aaad79d8629db1b5f5" style="width: 100.0%; height: 100.0%;">             <b>LG0068</b><br>             Gemeente: Malle<br>             Site IDs: 103|104<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.438<br>             log weekend/weekday: -0.496<br>             weekday commute peak share: 0.390<br>             weekday midday share: 0.261<br>             weekend midday/afternoon share: 0.496             </div>`)[0];
+                popup_83d014a5476dd938a23397d7acb7267d.setContent(html_6e82c89a01a959aaad79d8629db1b5f5);
+            
+        
+
+        circle_marker_b1bfc336d2bd744038e55da7ff073cf2.bindPopup(popup_83d014a5476dd938a23397d7acb7267d)
+        ;
+
+        
+    
+    
+            circle_marker_b1bfc336d2bd744038e55da7ff073cf2.bindTooltip(
+                `<div>
+                     LG0068: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_88855bf60bf12d3242c359b84681170b = L.circleMarker(
+                [50.755210000000005, 4.2494700000000005],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_a83715db63f9c8e02e8a00df72e0b4b2 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_d86ef8d2abbf7913f3a5dc3333df4fc5 = $(`<div id="html_d86ef8d2abbf7913f3a5dc3333df4fc5" style="width: 100.0%; height: 100.0%;">             <b>LG0069</b><br>             Gemeente: Halle|Sint-Pieters-Leeuw<br>             Site IDs: 105|106<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.826<br>             log weekend/weekday: -0.696<br>             weekday commute peak share: 0.380<br>             weekday midday share: 0.287<br>             weekend midday/afternoon share: 0.464             </div>`)[0];
+                popup_a83715db63f9c8e02e8a00df72e0b4b2.setContent(html_d86ef8d2abbf7913f3a5dc3333df4fc5);
+            
+        
+
+        circle_marker_88855bf60bf12d3242c359b84681170b.bindPopup(popup_a83715db63f9c8e02e8a00df72e0b4b2)
+        ;
+
+        
+    
+    
+            circle_marker_88855bf60bf12d3242c359b84681170b.bindTooltip(
+                `<div>
+                     LG0069: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2fd732cca00938064beeb14d80776b3d = L.circleMarker(
+                [50.8471728, 4.6954674],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_a180163dde992dcf980afd2ad44f03e0 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_222dccf8209702eeb2f53bd45184764d = $(`<div id="html_222dccf8209702eeb2f53bd45184764d" style="width: 100.0%; height: 100.0%;">             <b>LG0070</b><br>             Gemeente: Leuven<br>             Site IDs: 108<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.356<br>             log weekend/weekday: -0.310<br>             weekday commute peak share: 0.393<br>             weekday midday share: 0.257<br>             weekend midday/afternoon share: 0.537             </div>`)[0];
+                popup_a180163dde992dcf980afd2ad44f03e0.setContent(html_222dccf8209702eeb2f53bd45184764d);
+            
+        
+
+        circle_marker_2fd732cca00938064beeb14d80776b3d.bindPopup(popup_a180163dde992dcf980afd2ad44f03e0)
+        ;
+
+        
+    
+    
+            circle_marker_2fd732cca00938064beeb14d80776b3d.bindTooltip(
+                `<div>
+                     LG0070: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1bc1a6024b44185fc74f7a8eeb401152 = L.circleMarker(
+                [50.9903936, 4.4707023],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_0d251f5b07fb3d40261830c476e6020b = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_6a6e1ccbaf1f2167a059a7a9fdfb9f5a = $(`<div id="html_6a6e1ccbaf1f2167a059a7a9fdfb9f5a" style="width: 100.0%; height: 100.0%;">             <b>LG0071</b><br>             Gemeente: Zemst<br>             Site IDs: 109<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.458<br>             log weekend/weekday: -0.379<br>             weekday commute peak share: 0.436<br>             weekday midday share: 0.231<br>             weekend midday/afternoon share: 0.507             </div>`)[0];
+                popup_0d251f5b07fb3d40261830c476e6020b.setContent(html_6a6e1ccbaf1f2167a059a7a9fdfb9f5a);
+            
+        
+
+        circle_marker_1bc1a6024b44185fc74f7a8eeb401152.bindPopup(popup_0d251f5b07fb3d40261830c476e6020b)
+        ;
+
+        
+    
+    
+            circle_marker_1bc1a6024b44185fc74f7a8eeb401152.bindTooltip(
+                `<div>
+                     LG0071: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_89d5e8bcfada3036ee68c84d8fc5a745 = L.circleMarker(
+                [50.8871216, 4.4597084],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_55340e324df2642c704c923942d417fd = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_b5804e13cc7a2f4d579844b89e200542 = $(`<div id="html_b5804e13cc7a2f4d579844b89e200542" style="width: 100.0%; height: 100.0%;">             <b>LG0072</b><br>             Gemeente: Zaventem<br>             Site IDs: 111<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.641<br>             log weekend/weekday: -0.659<br>             weekday commute peak share: 0.508<br>             weekday midday share: 0.166<br>             weekend midday/afternoon share: 0.554             </div>`)[0];
+                popup_55340e324df2642c704c923942d417fd.setContent(html_b5804e13cc7a2f4d579844b89e200542);
+            
+        
+
+        circle_marker_89d5e8bcfada3036ee68c84d8fc5a745.bindPopup(popup_55340e324df2642c704c923942d417fd)
+        ;
+
+        
+    
+    
+            circle_marker_89d5e8bcfada3036ee68c84d8fc5a745.bindTooltip(
+                `<div>
+                     LG0072: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_70787bcf4e69295e2ae2f6b49b711ac8 = L.circleMarker(
+                [51.1354992, 4.9394789],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_613cd53f20f3c9f26611ddc7a34ae442 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_6d01c0350474ecbe494c49bf22a80407 = $(`<div id="html_6d01c0350474ecbe494c49bf22a80407" style="width: 100.0%; height: 100.0%;">             <b>LG0073</b><br>             Gemeente: Westerlo<br>             Site IDs: 112<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.447<br>             log weekend/weekday: -0.982<br>             weekday commute peak share: 0.298<br>             weekday midday share: 0.284<br>             weekend midday/afternoon share: 0.455             </div>`)[0];
+                popup_613cd53f20f3c9f26611ddc7a34ae442.setContent(html_6d01c0350474ecbe494c49bf22a80407);
+            
+        
+
+        circle_marker_70787bcf4e69295e2ae2f6b49b711ac8.bindPopup(popup_613cd53f20f3c9f26611ddc7a34ae442)
+        ;
+
+        
+    
+    
+            circle_marker_70787bcf4e69295e2ae2f6b49b711ac8.bindTooltip(
+                `<div>
+                     LG0073: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_736dd9c89c4e02ee4761df2cc79fbbef = L.circleMarker(
+                [50.96000525, 3.555641],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_cba3a3bcc4531acc5bca7af47ad72511 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_469a69d9275180d5f523a04f18652530 = $(`<div id="html_469a69d9275180d5f523a04f18652530" style="width: 100.0%; height: 100.0%;">             <b>LG0074</b><br>             Gemeente: Deinze|Nazareth<br>             Site IDs: 113|114<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.528<br>             log weekend/weekday: -0.676<br>             weekday commute peak share: 0.444<br>             weekday midday share: 0.229<br>             weekend midday/afternoon share: 0.498             </div>`)[0];
+                popup_cba3a3bcc4531acc5bca7af47ad72511.setContent(html_469a69d9275180d5f523a04f18652530);
+            
+        
+
+        circle_marker_736dd9c89c4e02ee4761df2cc79fbbef.bindPopup(popup_cba3a3bcc4531acc5bca7af47ad72511)
+        ;
+
+        
+    
+    
+            circle_marker_736dd9c89c4e02ee4761df2cc79fbbef.bindTooltip(
+                `<div>
+                     LG0074: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a76ba8281b27b49c3f19af9d03a1dd29 = L.circleMarker(
+                [51.1058367, 3.4350591],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_5ed2ac637afd1cdf4ea785238d7e3001 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_88a9738f7b015c88270331fc754d864f = $(`<div id="html_88a9738f7b015c88270331fc754d864f" style="width: 100.0%; height: 100.0%;">             <b>LG0075</b><br>             Gemeente: Aalter<br>             Site IDs: 115<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.554<br>             log weekend/weekday: -0.493<br>             weekday commute peak share: 0.400<br>             weekday midday share: 0.261<br>             weekend midday/afternoon share: 0.458             </div>`)[0];
+                popup_5ed2ac637afd1cdf4ea785238d7e3001.setContent(html_88a9738f7b015c88270331fc754d864f);
+            
+        
+
+        circle_marker_a76ba8281b27b49c3f19af9d03a1dd29.bindPopup(popup_5ed2ac637afd1cdf4ea785238d7e3001)
+        ;
+
+        
+    
+    
+            circle_marker_a76ba8281b27b49c3f19af9d03a1dd29.bindTooltip(
+                `<div>
+                     LG0075: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0641e77b6d224fcea070093ee0c4e9ff = L.circleMarker(
+                [50.9986113, 3.8040599],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_4fd43e16d47ad03f983c476330d89451 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_0cb32536fb9d950b205f16f00e28a5dd = $(`<div id="html_0cb32536fb9d950b205f16f00e28a5dd" style="width: 100.0%; height: 100.0%;">             <b>LG0076</b><br>             Gemeente: Melle<br>             Site IDs: 116|117<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.560<br>             log weekend/weekday: -0.206<br>             weekday commute peak share: 0.420<br>             weekday midday share: 0.273<br>             weekend midday/afternoon share: 0.537             </div>`)[0];
+                popup_4fd43e16d47ad03f983c476330d89451.setContent(html_0cb32536fb9d950b205f16f00e28a5dd);
+            
+        
+
+        circle_marker_0641e77b6d224fcea070093ee0c4e9ff.bindPopup(popup_4fd43e16d47ad03f983c476330d89451)
+        ;
+
+        
+    
+    
+            circle_marker_0641e77b6d224fcea070093ee0c4e9ff.bindTooltip(
+                `<div>
+                     LG0076: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a2d8cce3156e2530d30ffcf35b4f54ac = L.circleMarker(
+                [51.02811425, 3.76826385],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_07de667af3df4e7d2be04db705ecbf1d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ea159ca6fa2699b6d0fec9c7bb2dc6ac = $(`<div id="html_ea159ca6fa2699b6d0fec9c7bb2dc6ac" style="width: 100.0%; height: 100.0%;">             <b>LG0077</b><br>             Gemeente: Gent<br>             Site IDs: 118|119<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.232<br>             log weekend/weekday: -0.543<br>             weekday commute peak share: 0.371<br>             weekday midday share: 0.238<br>             weekend midday/afternoon share: 0.413             </div>`)[0];
+                popup_07de667af3df4e7d2be04db705ecbf1d.setContent(html_ea159ca6fa2699b6d0fec9c7bb2dc6ac);
+            
+        
+
+        circle_marker_a2d8cce3156e2530d30ffcf35b4f54ac.bindPopup(popup_07de667af3df4e7d2be04db705ecbf1d)
+        ;
+
+        
+    
+    
+            circle_marker_a2d8cce3156e2530d30ffcf35b4f54ac.bindTooltip(
+                `<div>
+                     LG0077: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_23c8a617372db3be6bc2c2f6e9f373ac = L.circleMarker(
+                [51.0605869, 4.055221850000001],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_2029cc2ce47bf5c8a02b715cc4de8284 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_889893b2d0a11372b9ea9a96b1699c95 = $(`<div id="html_889893b2d0a11372b9ea9a96b1699c95" style="width: 100.0%; height: 100.0%;">             <b>LG0078</b><br>             Gemeente: Zele<br>             Site IDs: 120|121<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.570<br>             log weekend/weekday: -0.277<br>             weekday commute peak share: 0.352<br>             weekday midday share: 0.258<br>             weekend midday/afternoon share: 0.436             </div>`)[0];
+                popup_2029cc2ce47bf5c8a02b715cc4de8284.setContent(html_889893b2d0a11372b9ea9a96b1699c95);
+            
+        
+
+        circle_marker_23c8a617372db3be6bc2c2f6e9f373ac.bindPopup(popup_2029cc2ce47bf5c8a02b715cc4de8284)
+        ;
+
+        
+    
+    
+            circle_marker_23c8a617372db3be6bc2c2f6e9f373ac.bindTooltip(
+                `<div>
+                     LG0078: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_30a7d446babeaa3e230a00e2f5f88184 = L.circleMarker(
+                [51.0373312, 4.102261],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_b97ee57f1921b97ba2e9313124a2c5b5 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_cef58f908eca767d0fb253ac957770cb = $(`<div id="html_cef58f908eca767d0fb253ac957770cb" style="width: 100.0%; height: 100.0%;">             <b>LG0079</b><br>             Gemeente: Dendermonde<br>             Site IDs: 122|125<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.363<br>             log weekend/weekday: -0.544<br>             weekday commute peak share: 0.361<br>             weekday midday share: 0.267<br>             weekend midday/afternoon share: 0.466             </div>`)[0];
+                popup_b97ee57f1921b97ba2e9313124a2c5b5.setContent(html_cef58f908eca767d0fb253ac957770cb);
+            
+        
+
+        circle_marker_30a7d446babeaa3e230a00e2f5f88184.bindPopup(popup_b97ee57f1921b97ba2e9313124a2c5b5)
+        ;
+
+        
+    
+    
+            circle_marker_30a7d446babeaa3e230a00e2f5f88184.bindTooltip(
+                `<div>
+                     LG0079: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fd877d6441ceaeec44880fb9640f6cb3 = L.circleMarker(
+                [51.19646335, 4.2361924],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_9d9cb4476d7e734267886d8cba2e1dc5 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_06c10591117182d30cc3dd35a4f18dd2 = $(`<div id="html_06c10591117182d30cc3dd35a4f18dd2" style="width: 100.0%; height: 100.0%;">             <b>LG0080</b><br>             Gemeente: Beveren<br>             Site IDs: 123|124<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.438<br>             log weekend/weekday: -0.434<br>             weekday commute peak share: 0.353<br>             weekday midday share: 0.304<br>             weekend midday/afternoon share: 0.490             </div>`)[0];
+                popup_9d9cb4476d7e734267886d8cba2e1dc5.setContent(html_06c10591117182d30cc3dd35a4f18dd2);
+            
+        
+
+        circle_marker_fd877d6441ceaeec44880fb9640f6cb3.bindPopup(popup_9d9cb4476d7e734267886d8cba2e1dc5)
+        ;
+
+        
+    
+    
+            circle_marker_fd877d6441ceaeec44880fb9640f6cb3.bindTooltip(
+                `<div>
+                     LG0080: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9384358fac1f7ac7570b47ab6450b8da = L.circleMarker(
+                [51.1017709, 4.1469307],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_78206e61208222dd6005f2edd08d6f45 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_0e13435e2176f38b22cd66d7ea4b4842 = $(`<div id="html_0e13435e2176f38b22cd66d7ea4b4842" style="width: 100.0%; height: 100.0%;">             <b>LG0081</b><br>             Gemeente: Hamme<br>             Site IDs: 126<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.826<br>             log weekend/weekday: -0.541<br>             weekday commute peak share: 0.404<br>             weekday midday share: 0.226<br>             weekend midday/afternoon share: 0.478             </div>`)[0];
+                popup_78206e61208222dd6005f2edd08d6f45.setContent(html_0e13435e2176f38b22cd66d7ea4b4842);
+            
+        
+
+        circle_marker_9384358fac1f7ac7570b47ab6450b8da.bindPopup(popup_78206e61208222dd6005f2edd08d6f45)
+        ;
+
+        
+    
+    
+            circle_marker_9384358fac1f7ac7570b47ab6450b8da.bindTooltip(
+                `<div>
+                     LG0081: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c7076f6ce37375aae94af727821f2079 = L.circleMarker(
+                [51.1342966, 4.9400421],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_b876ca63e69b05cb4373f47272452b7d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c4b2915e1921632bfcd078dc1b890c3b = $(`<div id="html_c4b2915e1921632bfcd078dc1b890c3b" style="width: 100.0%; height: 100.0%;">             <b>LG0082</b><br>             Gemeente: Westerlo<br>             Site IDs: 127<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.451<br>             log weekend/weekday: -1.093<br>             weekday commute peak share: 0.309<br>             weekday midday share: 0.292<br>             weekend midday/afternoon share: 0.492             </div>`)[0];
+                popup_b876ca63e69b05cb4373f47272452b7d.setContent(html_c4b2915e1921632bfcd078dc1b890c3b);
+            
+        
+
+        circle_marker_c7076f6ce37375aae94af727821f2079.bindPopup(popup_b876ca63e69b05cb4373f47272452b7d)
+        ;
+
+        
+    
+    
+            circle_marker_c7076f6ce37375aae94af727821f2079.bindTooltip(
+                `<div>
+                     LG0082: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_caa617b5d39ac2522674a91178e336db = L.circleMarker(
+                [51.09628, 3.97024],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_80188522c50f8ad18432d2d6058a1b74 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_1a871766af937fa5478a507dfcc081c2 = $(`<div id="html_1a871766af937fa5478a507dfcc081c2" style="width: 100.0%; height: 100.0%;">             <b>LG0083</b><br>             Gemeente: Lokeren<br>             Site IDs: 128|129<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.401<br>             log weekend/weekday: -0.400<br>             weekday commute peak share: 0.368<br>             weekday midday share: 0.279<br>             weekend midday/afternoon share: 0.436             </div>`)[0];
+                popup_80188522c50f8ad18432d2d6058a1b74.setContent(html_1a871766af937fa5478a507dfcc081c2);
+            
+        
+
+        circle_marker_caa617b5d39ac2522674a91178e336db.bindPopup(popup_80188522c50f8ad18432d2d6058a1b74)
+        ;
+
+        
+    
+    
+            circle_marker_caa617b5d39ac2522674a91178e336db.bindTooltip(
+                `<div>
+                     LG0083: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f9721d4e50df5d9a85f9b14930db1dd9 = L.circleMarker(
+                [51.0276612, 3.558569],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_d82883d1c5c9b5266f681cac30165c42 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_83fcef9755d3f1208098e5969a83314f = $(`<div id="html_83fcef9755d3f1208098e5969a83314f" style="width: 100.0%; height: 100.0%;">             <b>LG0084</b><br>             Gemeente: Deinze<br>             Site IDs: 131<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.833<br>             log weekend/weekday: 0.099<br>             weekday commute peak share: 0.343<br>             weekday midday share: 0.319<br>             weekend midday/afternoon share: 0.522             </div>`)[0];
+                popup_d82883d1c5c9b5266f681cac30165c42.setContent(html_83fcef9755d3f1208098e5969a83314f);
+            
+        
+
+        circle_marker_f9721d4e50df5d9a85f9b14930db1dd9.bindPopup(popup_d82883d1c5c9b5266f681cac30165c42)
+        ;
+
+        
+    
+    
+            circle_marker_f9721d4e50df5d9a85f9b14930db1dd9.bindTooltip(
+                `<div>
+                     LG0084: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6d728b00ddfd2c6dd4253d6a3cfdcd0d = L.circleMarker(
+                [51.24541825, 4.82981335],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_3a3797b6c1d228997645fd35529b6a2f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_847ae523bbb57349fe3df321f30f68d1 = $(`<div id="html_847ae523bbb57349fe3df321f30f68d1" style="width: 100.0%; height: 100.0%;">             <b>LG0085</b><br>             Gemeente: Lille<br>             Site IDs: 132|133<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.569<br>             log weekend/weekday: -0.462<br>             weekday commute peak share: 0.341<br>             weekday midday share: 0.300<br>             weekend midday/afternoon share: 0.483             </div>`)[0];
+                popup_3a3797b6c1d228997645fd35529b6a2f.setContent(html_847ae523bbb57349fe3df321f30f68d1);
+            
+        
+
+        circle_marker_6d728b00ddfd2c6dd4253d6a3cfdcd0d.bindPopup(popup_3a3797b6c1d228997645fd35529b6a2f)
+        ;
+
+        
+    
+    
+            circle_marker_6d728b00ddfd2c6dd4253d6a3cfdcd0d.bindTooltip(
+                `<div>
+                     LG0085: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_382bcbe95737e78bee931b11a0276b90 = L.circleMarker(
+                [51.254670149999995, 5.1038861],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_1f2f5479ed38c78efdfffd34cb8c527e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_8b29e7929d8c839deb15b16ecdf4b4cf = $(`<div id="html_8b29e7929d8c839deb15b16ecdf4b4cf" style="width: 100.0%; height: 100.0%;">             <b>LG0086</b><br>             Gemeente: Dessel<br>             Site IDs: 134|135<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.488<br>             log weekend/weekday: -0.515<br>             weekday commute peak share: 0.404<br>             weekday midday share: 0.269<br>             weekend midday/afternoon share: 0.445             </div>`)[0];
+                popup_1f2f5479ed38c78efdfffd34cb8c527e.setContent(html_8b29e7929d8c839deb15b16ecdf4b4cf);
+            
+        
+
+        circle_marker_382bcbe95737e78bee931b11a0276b90.bindPopup(popup_1f2f5479ed38c78efdfffd34cb8c527e)
+        ;
+
+        
+    
+    
+            circle_marker_382bcbe95737e78bee931b11a0276b90.bindTooltip(
+                `<div>
+                     LG0086: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cbc7a17e609a17c9dcd83635f33282a7 = L.circleMarker(
+                [51.0876313, 3.7587918],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_af7f5406361d653030cbb6df8b700c4a = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_1deef3c25645b6bb73fb82794b930b80 = $(`<div id="html_1deef3c25645b6bb73fb82794b930b80" style="width: 100.0%; height: 100.0%;">             <b>LG0087</b><br>             Gemeente: Gent<br>             Site IDs: 136<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.311<br>             log weekend/weekday: -1.697<br>             weekday commute peak share: 0.224<br>             weekday midday share: 0.271<br>             weekend midday/afternoon share: 0.354             </div>`)[0];
+                popup_af7f5406361d653030cbb6df8b700c4a.setContent(html_1deef3c25645b6bb73fb82794b930b80);
+            
+        
+
+        circle_marker_cbc7a17e609a17c9dcd83635f33282a7.bindPopup(popup_af7f5406361d653030cbb6df8b700c4a)
+        ;
+
+        
+    
+    
+            circle_marker_cbc7a17e609a17c9dcd83635f33282a7.bindTooltip(
+                `<div>
+                     LG0087: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0199c810e5802be412bb487c6e8e9feb = L.circleMarker(
+                [50.94084615, 5.3420024],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_2288ce8e67fbcac0ba575620c24bb1f3 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_faca3846c88f9883ebe7d5c47dc9d0cc = $(`<div id="html_faca3846c88f9883ebe7d5c47dc9d0cc" style="width: 100.0%; height: 100.0%;">             <b>LG0088</b><br>             Gemeente: Hasselt<br>             Site IDs: 137|138<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.490<br>             log weekend/weekday: -0.408<br>             weekday commute peak share: 0.351<br>             weekday midday share: 0.297<br>             weekend midday/afternoon share: 0.483             </div>`)[0];
+                popup_2288ce8e67fbcac0ba575620c24bb1f3.setContent(html_faca3846c88f9883ebe7d5c47dc9d0cc);
+            
+        
+
+        circle_marker_0199c810e5802be412bb487c6e8e9feb.bindPopup(popup_2288ce8e67fbcac0ba575620c24bb1f3)
+        ;
+
+        
+    
+    
+            circle_marker_0199c810e5802be412bb487c6e8e9feb.bindTooltip(
+                `<div>
+                     LG0088: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7bb1ab52464fe876333782049ee0f80c = L.circleMarker(
+                [51.0644267, 5.3819796],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#F58518", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_e4ee05f84af14ac88d1df926ad4d9253 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_1717a640b6b7ebb6205bb43838200137 = $(`<div id="html_1717a640b6b7ebb6205bb43838200137" style="width: 100.0%; height: 100.0%;">             <b>LG0089</b><br>             Gemeente: Houthalen-Helchteren<br>             Site IDs: 139<br>             Cluster ID: 1<br>             Label: strongly seasonal / recreational-like<br>             log summer/winter: 1.504<br>             log weekend/weekday: 0.213<br>             weekday commute peak share: 0.297<br>             weekday midday share: 0.405<br>             weekend midday/afternoon share: 0.633             </div>`)[0];
+                popup_e4ee05f84af14ac88d1df926ad4d9253.setContent(html_1717a640b6b7ebb6205bb43838200137);
+            
+        
+
+        circle_marker_7bb1ab52464fe876333782049ee0f80c.bindPopup(popup_e4ee05f84af14ac88d1df926ad4d9253)
+        ;
+
+        
+    
+    
+            circle_marker_7bb1ab52464fe876333782049ee0f80c.bindTooltip(
+                `<div>
+                     LG0089: strongly seasonal / recreational-like
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_812b7deb5f74552c9cc37d020e790515 = L.circleMarker(
+                [50.9300038, 5.3438616],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_bf6cf2a65f3757065f9fbb199b00bc80 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ca59796bbc6ff513a482adb6918cf494 = $(`<div id="html_ca59796bbc6ff513a482adb6918cf494" style="width: 100.0%; height: 100.0%;">             <b>LG0090</b><br>             Gemeente: Hasselt<br>             Site IDs: 140<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.397<br>             log weekend/weekday: -0.403<br>             weekday commute peak share: 0.305<br>             weekday midday share: 0.344<br>             weekend midday/afternoon share: 0.473             </div>`)[0];
+                popup_bf6cf2a65f3757065f9fbb199b00bc80.setContent(html_ca59796bbc6ff513a482adb6918cf494);
+            
+        
+
+        circle_marker_812b7deb5f74552c9cc37d020e790515.bindPopup(popup_bf6cf2a65f3757065f9fbb199b00bc80)
+        ;
+
+        
+    
+    
+            circle_marker_812b7deb5f74552c9cc37d020e790515.bindTooltip(
+                `<div>
+                     LG0090: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_caec7665919f22f0a9093cf36b81dc91 = L.circleMarker(
+                [50.83066, 3.26286],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4C78A8", "fillOpacity": 0.86, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+        
+    
+        var popup_13d6a93d2445e50a6f5cba3c5a246453 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_f439e7d15c94c0d17585e0832ac8627b = $(`<div id="html_f439e7d15c94c0d17585e0832ac8627b" style="width: 100.0%; height: 100.0%;">             <b>LG0092</b><br>             Gemeente: Kortrijk<br>             Site IDs: 143<br>             Cluster ID: 0<br>             Label: broad mixed / regular-use<br>             log summer/winter: 0.197<br>             log weekend/weekday: -0.469<br>             weekday commute peak share: 0.375<br>             weekday midday share: 0.283<br>             weekend midday/afternoon share: 0.444             </div>`)[0];
+                popup_13d6a93d2445e50a6f5cba3c5a246453.setContent(html_f439e7d15c94c0d17585e0832ac8627b);
+            
+        
+
+        circle_marker_caec7665919f22f0a9093cf36b81dc91.bindPopup(popup_13d6a93d2445e50a6f5cba3c5a246453)
+        ;
+
+        
+    
+    
+            circle_marker_caec7665919f22f0a9093cf36b81dc91.bindTooltip(
+                `<div>
+                     LG0092: broad mixed / regular-use
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var layer_control_ab56de76790c7dff85c8c5cf294add17_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_d437be072bc6d284a98bb1bbf4706016,
+                    "OpenStreetMap" : tile_layer_42960b7b21699ea2d4eb7db647f3d754,
+                    "CartoDB positron" : tile_layer_69a7f511b5f0b68a82af8f295182aeff,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_ab56de76790c7dff85c8c5cf294add17 = L.control.layers(
+                layer_control_ab56de76790c7dff85c8c5cf294add17_layers.base_layers,
+                layer_control_ab56de76790c7dff85c8c5cf294add17_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_e8d256cc7e2c7f23dd3e17af02d31e33);
+
+        
+</script>
+</html>

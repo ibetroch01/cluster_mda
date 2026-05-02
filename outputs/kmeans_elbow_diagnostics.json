@@ -1,0 +1,244 @@
+{
+  "generated_at": "2026-05-01T15:52:57.339471+00:00",
+  "inputs": {
+    "feature_table": "data/processed/location_group_features_selected.csv",
+    "selected_features": "outputs/selected_features.json"
+  },
+  "outputs": {
+    "results": "outputs/kmeans_elbow_results.csv",
+    "diagnostics": "outputs/kmeans_elbow_diagnostics.json",
+    "plot": "outputs/kmeans_elbow_plot.png",
+    "scaler": "outputs/scaler.joblib"
+  },
+  "n_rows": 89,
+  "n_features": 9,
+  "selected_features": [
+    "log_weekend_weekday_ratio",
+    "weekday_morning_peak_share",
+    "weekday_evening_peak_share",
+    "weekday_midday_share",
+    "weekend_midday_afternoon_share",
+    "weekday_peak_concentration_2h",
+    "log_summer_winter_ratio",
+    "night_share",
+    "daily_variability_cv"
+  ],
+  "forbidden_variables_checked": [
+    "avg_daily_count",
+    "gemeente",
+    "latitude",
+    "location_group_id",
+    "longitude",
+    "max_daily_count",
+    "mean_daily_total",
+    "median_daily_total",
+    "n_sites_in_group",
+    "n_valid_days",
+    "n_valid_weekdays",
+    "n_valid_weekend_days",
+    "site_id",
+    "total_count"
+  ],
+  "k_range": [
+    1,
+    10
+  ],
+  "kmeans_parameters": {
+    "init": "k-means++",
+    "n_init": 100,
+    "max_iter": 500,
+    "tol": 0.0001,
+    "algorithm": "lloyd",
+    "random_state": 42
+  },
+  "standard_scaler": {
+    "feature_names": [
+      "log_weekend_weekday_ratio",
+      "weekday_morning_peak_share",
+      "weekday_evening_peak_share",
+      "weekday_midday_share",
+      "weekend_midday_afternoon_share",
+      "weekday_peak_concentration_2h",
+      "log_summer_winter_ratio",
+      "night_share",
+      "daily_variability_cv"
+    ],
+    "mean": {
+      "log_weekend_weekday_ratio": -0.42419597693429106,
+      "weekday_morning_peak_share": 0.18634284572303064,
+      "weekday_evening_peak_share": 0.19039603596283763,
+      "weekday_midday_share": 0.2775620772000378,
+      "weekend_midday_afternoon_share": 0.4950611044469765,
+      "weekday_peak_concentration_2h": 0.25311483119312234,
+      "log_summer_winter_ratio": 0.6220083699981287,
+      "night_share": 0.051815101275118985,
+      "daily_variability_cv": 0.5162649866102949
+    },
+    "scale": {
+      "log_weekend_weekday_ratio": 0.30872667861120817,
+      "weekday_morning_peak_share": 0.04637113747831343,
+      "weekday_evening_peak_share": 0.028430442973356118,
+      "weekday_midday_share": 0.05493499764861296,
+      "weekend_midday_afternoon_share": 0.05471935565540352,
+      "weekday_peak_concentration_2h": 0.031213577777171462,
+      "log_summer_winter_ratio": 0.33661058668295324,
+      "night_share": 0.021608486190468235,
+      "daily_variability_cv": 0.18503882806127497
+    }
+  },
+  "feature_summary_before_scaling": {
+    "log_weekend_weekday_ratio": {
+      "mean": -0.42419597693429106,
+      "std": 0.30872667861120817,
+      "min": -1.6967972863441263,
+      "max": 0.4508988794265031
+    },
+    "weekday_morning_peak_share": {
+      "mean": 0.18634284572303064,
+      "std": 0.04637113747831343,
+      "min": 0.0700565193365636,
+      "max": 0.3386128740343228
+    },
+    "weekday_evening_peak_share": {
+      "mean": 0.19039603596283763,
+      "std": 0.028430442973356118,
+      "min": 0.102161246853442,
+      "max": 0.2484068590828493
+    },
+    "weekday_midday_share": {
+      "mean": 0.2775620772000378,
+      "std": 0.05493499764861296,
+      "min": 0.1655699731633671,
+      "max": 0.4543447363974077
+    },
+    "weekend_midday_afternoon_share": {
+      "mean": 0.4950611044469765,
+      "std": 0.05471935565540352,
+      "min": 0.3544081221433237,
+      "max": 0.6637650262262468
+    },
+    "weekday_peak_concentration_2h": {
+      "mean": 0.25311483119312234,
+      "std": 0.031213577777171462,
+      "min": 0.1997450945061934,
+      "max": 0.3658258235670838
+    },
+    "log_summer_winter_ratio": {
+      "mean": 0.6220083699981287,
+      "std": 0.33661058668295324,
+      "min": 0.1885569049683778,
+      "max": 1.9216494408661529
+    },
+    "night_share": {
+      "mean": 0.051815101275118985,
+      "std": 0.021608486190468235,
+      "min": 0.0076629677472619,
+      "max": 0.1572656293604653
+    },
+    "daily_variability_cv": {
+      "mean": 0.5162649866102949,
+      "std": 0.18503882806127497,
+      "min": 0.3075673483618385,
+      "max": 1.5570270673159377
+    }
+  },
+  "results": [
+    {
+      "k": 1,
+      "inertia": 801.0,
+      "relative_inertia_improvement": null,
+      "n_iter": 2,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 89}",
+      "silhouette_score": null
+    },
+    {
+      "k": 2,
+      "inertia": 564.1486205535743,
+      "relative_inertia_improvement": 0.295694606050469,
+      "n_iter": 2,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 7, \"1\": 82}",
+      "silhouette_score": 0.5048921925098917
+    },
+    {
+      "k": 3,
+      "inertia": 447.69171572210655,
+      "relative_inertia_improvement": 0.2064294772487323,
+      "n_iter": 13,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 44, \"1\": 38, \"2\": 7}",
+      "silhouette_score": 0.23769224849475099
+    },
+    {
+      "k": 4,
+      "inertia": 390.260161917112,
+      "relative_inertia_improvement": 0.12828370905269054,
+      "n_iter": 4,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 22, \"1\": 37, \"2\": 6, \"3\": 24}",
+      "silhouette_score": 0.21399880052071296
+    },
+    {
+      "k": 5,
+      "inertia": 339.0085811785047,
+      "relative_inertia_improvement": 0.13132670392704007,
+      "n_iter": 3,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 23, \"1\": 34, \"2\": 23, \"3\": 6, \"4\": 3}",
+      "silhouette_score": 0.23687232818760806
+    },
+    {
+      "k": 6,
+      "inertia": 296.2005013169139,
+      "relative_inertia_improvement": 0.12627432530697572,
+      "n_iter": 6,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 3, \"1\": 21, \"2\": 6, \"3\": 28, \"4\": 29, \"5\": 2}",
+      "silhouette_score": 0.25025441836723955
+    },
+    {
+      "k": 7,
+      "inertia": 253.4848243637538,
+      "relative_inertia_improvement": 0.14421203462939894,
+      "n_iter": 13,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 30, \"1\": 6, \"2\": 30, \"3\": 1, \"4\": 3, \"5\": 17, \"6\": 2}",
+      "silhouette_score": 0.2507601949256002
+    },
+    {
+      "k": 8,
+      "inertia": 232.98905156727255,
+      "relative_inertia_improvement": 0.08085601513986322,
+      "n_iter": 12,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 3, \"1\": 24, \"2\": 13, \"3\": 19, \"4\": 2, \"5\": 6, \"6\": 1, \"7\": 21}",
+      "silhouette_score": 0.20218071566627355
+    },
+    {
+      "k": 9,
+      "inertia": 215.67927417526943,
+      "relative_inertia_improvement": 0.07429438111174573,
+      "n_iter": 4,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 18, \"1\": 23, \"2\": 5, \"3\": 21, \"4\": 1, \"5\": 15, \"6\": 2, \"7\": 2, \"8\": 2}",
+      "silhouette_score": 0.1954684470639024
+    },
+    {
+      "k": 10,
+      "inertia": 200.89421753852724,
+      "relative_inertia_improvement": 0.06855112385405779,
+      "n_iter": 6,
+      "reached_max_iter": false,
+      "cluster_sizes": "{\"0\": 9, \"1\": 14, \"2\": 16, \"3\": 5, \"4\": 18, \"5\": 2, \"6\": 20, \"7\": 2, \"8\": 2, \"9\": 1}",
+      "silhouette_score": 0.18090777667865995
+    }
+  ],
+  "methodological_notes": [
+    "KMeans uses squared Euclidean distance in standardized feature space.",
+    "No custom distance metric is used.",
+    "Silhouette score is included as a secondary diagnostic only.",
+    "No final k is selected automatically; inspect the elbow diagnostics before choosing k."
+  ],
+  "final_k_recommendation": null
+}
