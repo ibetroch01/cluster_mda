@@ -45,12 +45,28 @@ weekday_morning_peak_share + weekday_evening_peak_share
 - `outputs/final_small_cluster_audit.csv`
 - `outputs/final_pca_outlier_audit.csv`
 
+## Setup With a Virtual Environment
+
+Create a local Python environment and install the project dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -e .
+```
+
+The `.venv/` folder is intentionally ignored by Git. Keep the raw AWV data
+outside version control and place it locally under `data/raw/` when running the
+analysis.
+
 ## Reproducibility Commands
 
 ```bash
 make final-model
 make final-figures
 make k3-exploration
+make app
 ```
 
 ## Notes

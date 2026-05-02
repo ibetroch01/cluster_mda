@@ -1,7 +1,9 @@
 .DS_Store
+.venv/
+.env
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
 .matplotlib-cache/
-reports/final_report_render/
+data/
