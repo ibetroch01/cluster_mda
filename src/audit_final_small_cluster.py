@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -15,7 +14,6 @@ QUALITY_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_quality_su
 GROUPS_INPUT = PROJECT_ROOT / "data" / "processed" / "location_groups.csv"
 FEATURES_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_candidate.csv"
 AUDIT_OUTPUT = PROJECT_ROOT / "outputs" / "final_small_cluster_audit.csv"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "final_small_cluster_audit.md"
 
 COMPACT5_FEATURES = [
     "log_weekend_weekday_ratio",
@@ -124,90 +122,18 @@ def build_audit_table(
     return audit, small_cluster_id
 
 
-def write_report(audit: pd.DataFrame, small_cluster_id: int) -> None:
-    """Write Dutch audit report."""
-    n_check = int((audit["data_quality_flag"] == "check").sum())
-    n_ok = int((audit["data_quality_flag"] == "ok").sum())
-    lines = [
-        "# Audit finale kleine cluster",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Context",
-        "",
-        f"Deze audit bekijkt de kleine cluster uit het finale k=2 compact5-model: `cluster_{small_cluster_id}`. "
-        "Deze cluster werd voorzichtig omschreven als een strongly seasonal / recreational-like temporal pattern. "
-        "Dat is een interpretatie van telpatronen, geen bewijs van fietsmotieven.",
-        "",
-        "## Datakwaliteit",
-        "",
-        f"- Aantal locatiegroepen in audit: `{len(audit)}`",
-        f"- `ok`: `{n_ok}`",
-        f"- `check`: `{n_check}`",
-        "",
-        "De auditvlag is `check` zodra een kwaliteitsindicator zwak lijkt volgens de kandidaatdrempels "
-        "(bijvoorbeeld te weinig geldige dagen, te weinig zomer/winterdagen, minder dan 12 maanden, minder dan 2 jaren, "
-        "lage full coverage of veel partial coverage).",
-        "",
-    ]
-    if n_check == 0:
-        lines.append(
-            "Alle zeven locatiegroepen krijgen `ok`. Op basis van deze samenvattende kwaliteitsindicatoren lijkt de kleine cluster dus niet duidelijk veroorzaakt door zwakke dekking."
-        )
-    else:
-        lines.append(
-            "Minstens één locatiegroep krijgt `check`; inspecteer deze locaties manueel vooraleer de cluster inhoudelijk te zwaar te interpreteren."
-        )
-    lines.extend(
-        [
-            "",
-            "## Locaties",
-            "",
-            "| location_group_id | gemeente | site_ids | valid days | full coverage | partial coverage | log_summer_winter_ratio | log_weekend_weekday_ratio | flag |",
-            "|---|---|---|---:|---:|---:|---:|---:|---|",
-        ]
-    )
-    for row in audit.itertuples(index=False):
-        lines.append(
-            "| "
-            f"{row.location_group_id} | "
-            f"{row.gemeente} | "
-            f"{row.site_ids} | "
-            f"{int(row.n_valid_days)} | "
-            f"{row.percentage_full_coverage_intervals:.3f} | "
-            f"{row.percentage_partial_coverage_intervals:.3f} | "
-            f"{row.log_summer_winter_ratio:.3f} | "
-            f"{row.log_weekend_weekday_ratio:.3f} | "
-            f"{row.data_quality_flag} |"
-        )
-    lines.extend(
-        [
-            "",
-            "## Voorzichtige conclusie",
-            "",
-            "De audit ondersteunt dat de kleine cluster een stabiel en sterk seizoensgebonden temporeel patroon vertoont. "
-            "De conclusie blijft voorzichtig: de data tonen relatieve gebruikspatronen doorheen tijd, geen rechtstreeks waargenomen motieven van fietsers.",
-            "",
-        ]
-    )
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_audit() -> dict[str, object]:
     """Run the final small-cluster audit."""
     clusters, quality, groups, features = load_inputs()
     audit, small_cluster_id = build_audit_table(clusters, quality, groups, features)
     AUDIT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     audit.to_csv(AUDIT_OUTPUT, index=False)
-    write_report(audit, small_cluster_id)
     return {
         "small_cluster_id": small_cluster_id,
         "n_rows": int(len(audit)),
         "flag_counts": audit["data_quality_flag"].value_counts().to_dict(),
         "outputs": {
             "audit": str(AUDIT_OUTPUT.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

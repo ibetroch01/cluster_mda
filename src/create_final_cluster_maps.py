@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -16,7 +15,6 @@ K3_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_clusters_k3_com
 LOCATION_GROUPS_INPUT = PROJECT_ROOT / "data" / "processed" / "location_groups.csv"
 K2_MAP_OUTPUT = PROJECT_ROOT / "outputs" / "fig_final_k2_cluster_map.png"
 K3_MAP_OUTPUT = PROJECT_ROOT / "outputs" / "fig_exploratory_k3_cluster_map.png"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "map_interpretation.md"
 
 K2_LABELS = {
     "broad": "broad mixed / regular-use",
@@ -139,63 +137,19 @@ def plot_map(
     return summary
 
 
-def write_report(k2_summary: pd.DataFrame, k3_summary: pd.DataFrame) -> None:
-    """Write cautious map interpretation report."""
-    lines = [
-        "# Kaartinterpretatie AWV clustering",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Belangrijk",
-        "",
-        "De kaarten gebruiken gemiddelde lengte- en breedtegraden alleen voor interpretatie achteraf. "
-        "Coördinaten, gemeenten en site-identiteiten zijn niet gebruikt als clusteringfeatures. "
-        "De clusters beschrijven relatieve temporele telpatronen en bewijzen geen fietsmotieven.",
-        "",
-        "## Finale k=2 kaart",
-        "",
-    ]
-    for row in k2_summary.itertuples(index=False):
-        lines.append(f"- `{row.cluster_label}`: {int(row.n)} locatiegroepen.")
-    lines.extend(
-        [
-            "",
-            "De finale k=2 kaart toont vooral een kleine strongly seasonal / recreational-like cluster tegenover een brede mixed / regular-use groep. "
-            "Geografische patronen mogen alleen voorzichtig worden gelezen; de kaart is bedoeld als inspectie, niet als modelinput.",
-            "",
-            "## Exploratieve k=3 kaart",
-            "",
-        ]
-    )
-    for row in k3_summary.itertuples(index=False):
-        lines.append(f"- `{row.cluster_label}`: {int(row.n)} locatiegroepen.")
-    lines.extend(
-        [
-            "",
-            "De k=3 kaart is exploratief. Ze behoudt de strongly seasonal / recreational-like groep en splitst de brede groep in een meer mixed daytime / regular-use profiel en een meer commuter-like / peak-oriented regular-use profiel. "
-            "Deze termen blijven voorzichtig en verwijzen naar temporele patronen, niet naar bewezen motieven.",
-            "",
-        ]
-    )
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_maps() -> dict[str, object]:
-    """Create both final static cluster maps and report."""
+    """Create both final static cluster maps."""
     k2, k3, groups = load_inputs()
     k2 = label_k2(ensure_coordinates(k2, groups))
     k3 = label_k3(ensure_coordinates(k3, groups))
     k2_summary = plot_map(k2, K2_MAP_OUTPUT, "Final k=2 compact5 clusters", "cluster_id")
     k3_summary = plot_map(k3, K3_MAP_OUTPUT, "Exploratory k=3 compact5 clusters", "k3_cluster_id")
-    write_report(k2_summary, k3_summary)
     return {
         "k2_counts": k2_summary[["cluster_label", "n"]].to_dict(orient="records"),
         "k3_counts": k3_summary[["cluster_label", "n"]].to_dict(orient="records"),
         "outputs": {
             "k2_map": str(K2_MAP_OUTPUT.relative_to(PROJECT_ROOT)),
             "k3_map": str(K3_MAP_OUTPUT.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

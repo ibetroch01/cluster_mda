@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -32,7 +30,6 @@ FIG_WEEKDAY = PROJECT_ROOT / "outputs" / "fig_k3_weekday_hourly_profile.png"
 FIG_WEEKEND = PROJECT_ROOT / "outputs" / "fig_k3_weekend_hourly_profile.png"
 FIG_MONTHLY = PROJECT_ROOT / "outputs" / "fig_k3_monthly_profile.png"
 FIG_HEATMAP = PROJECT_ROOT / "outputs" / "fig_k2_to_k3_transition_heatmap.png"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "k3_exploratory_interpretation.md"
 
 COMPACT5_FEATURES = [
     "log_weekend_weekday_ratio",
@@ -481,64 +478,6 @@ def characterize_broad_split(diff: pd.DataFrame, broad_summary: pd.DataFrame) ->
     return bullets
 
 
-def write_report(
-    transition_info: dict[str, object],
-    k3_summary: pd.DataFrame,
-    broad_summary: pd.DataFrame,
-    diff: pd.DataFrame,
-) -> None:
-    """Write cautious Dutch interpretation report."""
-    lines = [
-        "# Exploratieve k=3 analyse naast finale k=2",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Status",
-        "",
-        "Dit is een exploratieve analyse. Het finale hoofdmodel blijft K-means met `k=2` op de compact5 feature-set. "
-        "k=3 wordt hier alleen gebruikt om te begrijpen of er binnen de brede k=2-cluster extra temporele structuur zit.",
-        "",
-        "De clusters zijn gebaseerd op relatieve temporele telpatronen. Ze bewijzen geen fietsmotieven.",
-        "",
-        "## Stabiliteit van de kleine cluster",
-        "",
-        f"- De kleine finale k=2-cluster is cluster_{transition_info['k2_small_cluster_id']}.",
-        f"- De overeenkomstige k=3-cluster is cluster_{transition_info['corresponding_k3_cluster_id']}.",
-        f"- Overlap: {transition_info['small_cluster_intersection_n']} van {transition_info['small_cluster_union_n']} unieke locatiegroepen.",
-        f"- Jaccard similarity: `{transition_info['small_cluster_jaccard']:.3f}`.",
-        "- Dit wijst erop dat de kleine strongly seasonal / recreational-like cluster stabiel blijft onder k=3.",
-        "",
-        "## Globale k=3 clusters",
-        "",
-    ]
-    for row in k3_summary.itertuples(index=False):
-        lines.append(
-            f"- cluster_{int(row.k3_cluster_id)}: {int(row.n_observations)} locatiegroepen "
-            f"({row.pct_observations * 100:.1f}%), silhouette gemiddeld `{row.silhouette_mean:.3f}`. "
-            f"Topfeatures: {row.top_5_signed_features}."
-        )
-    lines.extend(["", "## Split binnen de brede k=2-cluster", ""])
-    for row in broad_summary.itertuples(index=False):
-        lines.append(
-            f"- cluster_{int(row.k3_cluster_id)} bevat {int(row.n_location_groups)} locatiegroepen "
-            f"({row.pct_of_original_k2_broad_cluster * 100:.1f}% van de brede k=2-cluster), "
-            f"silhouette gemiddeld `{row.silhouette_mean:.3f}`."
-        )
-    lines.extend([""])
-    lines.extend(f"- {bullet}" for bullet in characterize_broad_split(diff, broad_summary))
-    lines.extend(
-        [
-            "",
-            "Voorzichtige interpretatie: k=3 behoudt de kleine extreme seasonal/recreational-like groep en splitst vooral de brede resterende groep in twee temporele accenten. "
-            "Een subcluster lijkt relatief meer commuter-like / regular-use, terwijl het andere subcluster meer mixed daytime of minder piekgericht kan zijn. "
-            "Deze interpretatie blijft descriptief en exploratief.",
-            "",
-        ]
-    )
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_exploration() -> dict[str, object]:
     """Run the k=3 exploratory workflow."""
     features, k2, groups = load_inputs()
@@ -566,7 +505,6 @@ def run_exploration() -> dict[str, object]:
     plot_hourly_profile(location_level_hourly_profiles(counts, k3_assignments, valid_days, weekend=True), FIG_WEEKEND, "Exploratory k=3 weekend hourly profile")
     plot_monthly_profile(monthly_profile(valid_days, k3_assignments))
     plot_transition_heatmap(transition)
-    write_report(info, k3_summary, broad_summary, diff)
 
     return {
         "n_rows_model": int(len(k3_assignments)),
@@ -585,7 +523,6 @@ def run_exploration() -> dict[str, object]:
             "fig_weekend": str(FIG_WEEKEND.relative_to(PROJECT_ROOT)),
             "fig_monthly": str(FIG_MONTHLY.relative_to(PROJECT_ROOT)),
             "fig_heatmap": str(FIG_HEATMAP.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

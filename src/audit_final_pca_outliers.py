@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -15,7 +14,6 @@ CLUSTERS_INPUT = PROJECT_ROOT / "data" / "processed" / "final_location_group_clu
 QUALITY_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_quality_summary.csv"
 GROUPS_INPUT = PROJECT_ROOT / "data" / "processed" / "location_groups.csv"
 AUDIT_OUTPUT = PROJECT_ROOT / "outputs" / "final_pca_outlier_audit.csv"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "final_pca_outlier_audit.md"
 
 COMPACT5_FEATURES = [
     "log_weekend_weekday_ratio",
@@ -156,78 +154,6 @@ def build_audit(clusters: pd.DataFrame, quality: pd.DataFrame, groups: pd.DataFr
     )
 
 
-def write_report(audit: pd.DataFrame, explained_variance: list[float]) -> None:
-    """Write Dutch outlier audit report."""
-    n_quality = int((audit["outlier_assessment"] == "possible_data_quality_issue").sum())
-    n_valid = int((audit["outlier_assessment"] == "valid_unusual_temporal_profile").sum())
-    lines = [
-        "# PCA-outlieraudit finale k=2 compact5 clustering",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Methode",
-        "",
-        "PCA werd opnieuw berekend op de gestandaardiseerde compact5-featurematrix van het finale k=2-model. "
-        "Daarna zijn twee outlierlijsten gemaakt: de vijf grootste absolute PC2-scores en de vijf grootste afstanden tot de toegewezen K-means-centroid.",
-        "",
-        f"- PC1 verklaarde `{explained_variance[0] * 100:.1f}%` van de variantie.",
-        f"- PC2 verklaarde `{explained_variance[1] * 100:.1f}%` van de variantie.",
-        f"- Samen tonen PC1 en PC2 `{sum(explained_variance) * 100:.1f}%` van de gestandaardiseerde compact5-variantie.",
-        "",
-        "## Auditbeoordeling",
-        "",
-        f"- Aantal unieke outliers in de audit: `{len(audit)}`",
-        f"- Lijken geldig ongebruikelijk temporeel profiel: `{n_valid}`",
-        f"- Mogelijke data-quality issue: `{n_quality}`",
-        "",
-    ]
-    if n_quality == 0:
-        lines.append(
-            "Op basis van de beschikbare kwaliteitsmetrics lijken deze PCA/centroid-outliers eerder geldige ongebruikelijke temporele profielen dan duidelijke data-quality problemen."
-        )
-    else:
-        lines.append(
-            "Een deel van de outliers heeft zwakkere kwaliteitsmetrics. Die locaties moeten manueel gecontroleerd worden voordat ze inhoudelijk zwaar worden geïnterpreteerd."
-        )
-
-    lines.extend(
-        [
-            "",
-            "## Outliers",
-            "",
-            "| location_group_id | cluster | gemeente | reason | PC1 | PC2 | distance | silhouette | assessment |",
-            "|---|---:|---|---|---:|---:|---:|---:|---|",
-        ]
-    )
-    for row in audit.itertuples(index=False):
-        lines.append(
-            "| "
-            f"{row.location_group_id} | "
-            f"{int(row.cluster_id)} | "
-            f"{row.gemeente} | "
-            f"{row.outlier_reason} | "
-            f"{row.pc1:.3f} | "
-            f"{row.pc2:.3f} | "
-            f"{row.distance_to_assigned_centroid:.3f} | "
-            f"{row.silhouette_value:.3f} | "
-            f"{row.outlier_assessment} |"
-        )
-
-    lines.extend(
-        [
-            "",
-            "## Voorzichtige conclusie",
-            "",
-            "Deze audit toont welke locatiegroepen extreem liggen in de PCA-weergave of relatief ver van hun centroid liggen. "
-            "Dat betekent niet automatisch dat ze fout zijn. Wanneer kwaliteitsindicatoren voldoende zijn, worden ze hier gezien als geldige maar ongebruikelijke temporele profielen. "
-            "De clusters blijven patronen in fietstellingen, geen bewezen fietsmotieven.",
-            "",
-        ]
-    )
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_audit() -> dict[str, object]:
     """Run final PCA outlier audit."""
     clusters, quality, groups = load_inputs()
@@ -235,14 +161,12 @@ def run_audit() -> dict[str, object]:
     audit = build_audit(clusters_with_pca, quality, groups)
     AUDIT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     audit.to_csv(AUDIT_OUTPUT, index=False)
-    write_report(audit, explained)
     return {
         "n_audit_rows": int(len(audit)),
         "explained_variance": explained,
         "assessment_counts": audit["outlier_assessment"].value_counts().to_dict(),
         "outputs": {
             "audit": str(AUDIT_OUTPUT.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

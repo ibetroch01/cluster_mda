@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -23,7 +22,6 @@ WEEKEND_PROFILE_FIG = PROJECT_ROOT / "outputs" / "fig_weekend_hourly_profile_k2.
 MONTHLY_PROFILE_FIG = PROJECT_ROOT / "outputs" / "fig_monthly_seasonal_profile_k2.png"
 MAP_FIG = PROJECT_ROOT / "outputs" / "fig_location_groups_map_k2.png"
 SMALL_CLUSTER_TABLE = PROJECT_ROOT / "outputs" / "small_cluster_detail_k2.csv"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "final_cluster_visual_interpretation.md"
 
 COMPACT5_FEATURES = [
     "log_weekend_weekday_ratio",
@@ -326,46 +324,6 @@ def small_cluster_detail(clusters: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def write_interpretation(
-    clusters: pd.DataFrame,
-    summary: pd.DataFrame,
-) -> None:
-    """Write short cautious Dutch visual interpretation."""
-    small_cluster = summary.sort_values("n_observations").iloc[0]
-    large_cluster = summary.sort_values("n_observations").iloc[-1]
-    lines = [
-        "# Visuele interpretatie finale K-means clusters",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Kernboodschap",
-        "",
-        "Het finale k=2 compact5-model toont vooral een stabiele kleine extreme cluster tegenover een brede resterende groep. "
-        "De clusters zijn gebaseerd op relatieve temporele patronen, niet op absolute volumes, coördinaten of gemeenten.",
-        "",
-        "Deze patronen mogen niet gelezen worden als bewijs van fietsmotieven. De omschrijvingen zijn voorzichtig: "
-        "`strongly seasonal / recreational-like pattern` en `broad mixed / less seasonal pattern`.",
-        "",
-        "## Clusters",
-        "",
-        f"- Kleine cluster: `{small_cluster['cluster_name']}` met {int(small_cluster['n_observations'])} locatiegroepen "
-        f"({small_cluster['pct_observations'] * 100:.1f}%). Deze cluster heeft vooral hogere seizoensratio's, hogere weekend/weekdagratio "
-        "en hogere weekend-middag/namiddag-aandelen.",
-        f"- Grote cluster: `{large_cluster['cluster_name']}` met {int(large_cluster['n_observations'])} locatiegroepen "
-        f"({large_cluster['pct_observations'] * 100:.1f}%). Dit is een brede, minder seizoensgebonden restgroep met een gemengd temporeel profiel.",
-        "",
-        "## Figuren",
-        "",
-        "- `fig_feature_profile_standardized_k2.png` toont welke compact5-features hoog of laag liggen per cluster.",
-        "- `fig_weekday_hourly_profile_k2.png` en `fig_weekend_hourly_profile_k2.png` tonen genormaliseerde uurlijkse profielen, gemiddeld per locatiegroep zodat grote tellocaties niet domineren.",
-        "- `fig_monthly_seasonal_profile_k2.png` toont maandprofielen genormaliseerd binnen elke locatiegroep.",
-        "- `fig_location_groups_map_k2.png` gebruikt coördinaten alleen voor interpretatie achteraf.",
-        "",
-    ]
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_visualizations() -> dict[str, object]:
     """Create all final visualizations and tables."""
     clusters, counts, location_groups = load_inputs()
@@ -387,7 +345,6 @@ def run_visualizations() -> dict[str, object]:
     small = small_cluster_detail(clusters)
     SMALL_CLUSTER_TABLE.parent.mkdir(parents=True, exist_ok=True)
     small.to_csv(SMALL_CLUSTER_TABLE, index=False)
-    write_interpretation(clusters, summary)
 
     return {
         "n_location_groups": int(len(clusters)),
@@ -401,7 +358,6 @@ def run_visualizations() -> dict[str, object]:
             "monthly_profile": str(MONTHLY_PROFILE_FIG.relative_to(PROJECT_ROOT)),
             "map": str(MAP_FIG.relative_to(PROJECT_ROOT)),
             "small_cluster_table": str(SMALL_CLUSTER_TABLE.relative_to(PROJECT_ROOT)),
-            "interpretation": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

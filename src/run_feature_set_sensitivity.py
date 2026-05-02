@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -19,7 +18,6 @@ DEFAULT_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_c
 DIAGNOSTICS_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_kmeans_diagnostics.csv"
 MODEL_COMPARISON_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_model_comparison.csv"
 CLUSTER_PROFILES_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_cluster_profiles.csv"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "feature_set_sensitivity_report.md"
 
 KMEANS_PARAMETERS = {
     "init": "k-means++",
@@ -227,73 +225,6 @@ def fit_candidate_models(
     return pd.DataFrame.from_records(model_records), pd.DataFrame.from_records(profile_records)
 
 
-def interpret_sensitivity(
-    diagnostics: pd.DataFrame,
-    model_comparison: pd.DataFrame,
-    profiles: pd.DataFrame,
-) -> str:
-    """Build a cautious Dutch sensitivity report."""
-    lines = [
-        "# Feature-set sensitivityanalyse voor K-means",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Doel",
-        "",
-        "Deze analyse controleert of de k=2-structuur robuust blijft wanneer optionele features zoals `night_share` en `daily_variability_cv` worden verwijderd. "
-        "Alle feature-sets gebruiken alleen relatieve temporele patronen; volume, locatie en gemeente worden niet gebruikt als clusteringfeatures.",
-        "",
-        "## Feature-sets",
-        "",
-    ]
-    for name, columns in FEATURE_SETS.items():
-        lines.append(f"- **{name}**: {', '.join(f'`{column}`' for column in columns)}")
-    lines.extend(["", "## Elbow- en silhouette-diagnostiek", ""])
-    summary = diagnostics.loc[diagnostics["k"].isin([2, 3])].copy()
-    for row in summary.itertuples(index=False):
-        lines.append(
-            f"- {row.feature_set}, k={int(row.k)}: silhouette `{row.silhouette_score_overall:.3f}`, "
-            f"kleinste cluster `{row.smallest_cluster_pct * 100:.1f}%`, inertia `{row.inertia:.2f}`."
-        )
-
-    lines.extend(["", "## Kandidaatmodellen k=2 en k=3", ""])
-    for row in model_comparison.itertuples(index=False):
-        lines.append(
-            f"- {row.feature_set}, k={int(row.k)}: clusters {row.cluster_sizes}, "
-            f"silhouette `{row.silhouette_score_overall:.3f}`, negatieve silhouette `{row.pct_negative_silhouette * 100:.1f}%`."
-        )
-
-    lines.extend(["", "## Clusterprofielen", ""])
-    for row in profiles.itertuples(index=False):
-        lines.append(
-            f"- {row.feature_set}, k={int(row.k)}, {row.cluster_name}: "
-            f"{int(row.n_observations)} observaties ({row.pct_observations * 100:.1f}%). "
-            f"Topfeatures: {row.top_5_signed_centroid_features}."
-        )
-
-    k2 = model_comparison.loc[model_comparison["k"] == 2].set_index("feature_set")
-    k3 = model_comparison.loc[model_comparison["k"] == 3].set_index("feature_set")
-    full_k2_sil = float(k2.loc["full9", "silhouette_score_overall"])
-    core_k2_sil = float(k2.loc["core7_no_optional", "silhouette_score_overall"])
-    compact_k2_sil = float(k2.loc["compact5", "silhouette_score_overall"])
-    full_small = float(k2.loc["full9", "smallest_cluster_pct"])
-    core_small = float(k2.loc["core7_no_optional", "smallest_cluster_pct"])
-    compact_small = float(k2.loc["compact5", "smallest_cluster_pct"])
-    conclusion = [
-        "",
-        "## Voorzichtige conclusie",
-        "",
-        f"- Voor k=2 blijft de silhouette hoog over feature-sets heen: full9 `{full_k2_sil:.3f}`, core7_no_optional `{core_k2_sil:.3f}`, compact5 `{compact_k2_sil:.3f}`.",
-        f"- De kleinste k=2-cluster blijft klein: full9 `{full_small * 100:.1f}%`, core7_no_optional `{core_small * 100:.1f}%`, compact5 `{compact_small * 100:.1f}%`.",
-        "- Dit suggereert dat de k=2-structuur niet alleen door `night_share` en `daily_variability_cv` veroorzaakt wordt.",
-        "- k=3 geeft in sommige feature-sets extra detail, maar moet inhoudelijk worden beoordeeld; deze analyse kiest nog geen finale k.",
-        "- De clusters blijven temporele patroonclusters en bewijzen geen fietsmotieven.",
-        "",
-    ]
-    lines.extend(conclusion)
-    return "\n".join(lines)
-
-
 def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
     """Run the full feature-set sensitivity workflow."""
     features = load_features(input_path)
@@ -313,12 +244,11 @@ def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
     model_comparison = pd.concat(all_model_comparisons, ignore_index=True)
     cluster_profiles = pd.concat(all_profiles, ignore_index=True)
 
-    for path in [DIAGNOSTICS_OUTPUT, MODEL_COMPARISON_OUTPUT, CLUSTER_PROFILES_OUTPUT, REPORT_OUTPUT]:
+    for path in [DIAGNOSTICS_OUTPUT, MODEL_COMPARISON_OUTPUT, CLUSTER_PROFILES_OUTPUT]:
         path.parent.mkdir(parents=True, exist_ok=True)
     diagnostics.to_csv(DIAGNOSTICS_OUTPUT, index=False)
     model_comparison.to_csv(MODEL_COMPARISON_OUTPUT, index=False)
     cluster_profiles.to_csv(CLUSTER_PROFILES_OUTPUT, index=False)
-    REPORT_OUTPUT.write_text(interpret_sensitivity(diagnostics, model_comparison, cluster_profiles), encoding="utf-8")
 
     return {
         "n_rows_input": int(len(features)),
@@ -327,7 +257,6 @@ def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
             "diagnostics": str(DIAGNOSTICS_OUTPUT.relative_to(PROJECT_ROOT)),
             "model_comparison": str(MODEL_COMPARISON_OUTPUT.relative_to(PROJECT_ROOT)),
             "cluster_profiles": str(CLUSTER_PROFILES_OUTPUT.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 

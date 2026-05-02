@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
@@ -23,7 +21,6 @@ SUMMARY_OUTPUT = PROJECT_ROOT / "outputs" / "final_cluster_summary_k2_compact5.c
 SILHOUETTE_OUTPUT = PROJECT_ROOT / "outputs" / "final_cluster_silhouette_k2_compact5.csv"
 MODEL_OUTPUT = PROJECT_ROOT / "outputs" / "final_kmeans_model_k2_compact5.joblib"
 SCALER_OUTPUT = PROJECT_ROOT / "outputs" / "final_scaler_k2_compact5.joblib"
-REPORT_OUTPUT = PROJECT_ROOT / "reports" / "final_kmeans_model_selection.md"
 
 COMPACT5_FEATURES = [
     "log_weekend_weekday_ratio",
@@ -232,88 +229,6 @@ def build_silhouette_summary(assignments: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame.from_records(records)
 
 
-def write_report(
-    assignments: pd.DataFrame,
-    summary: pd.DataFrame,
-    model: KMeans,
-    rows_removed_missing: int,
-) -> None:
-    """Write cautious Dutch final model report."""
-    overall_silhouette = float(assignments["silhouette_value"].mean())
-    lines = [
-        "# Finale K-means clustering: k=2 compact5",
-        "",
-        f"Gegenereerd op: {datetime.now(timezone.utc).isoformat()}",
-        "",
-        "## Methodologische keuze",
-        "",
-        "Het finale kandidaatmodel gebruikt K-means met `k=2` en de compacte feature-set `compact5`. "
-        "Deze keuze is gebaseerd op elbow-diagnostiek, silhouette scores, feature-set sensitivity analysis en interpretability. "
-        "`full9` en `core7_no_optional` blijven robuustheidscontroles en zijn niet het finale model.",
-        "",
-        "Belangrijk: de clusters beschrijven relatieve temporele telpatronen. Ze bewijzen geen fietsmotieven.",
-        "",
-        "## Compact5 features",
-        "",
-    ]
-    for feature in COMPACT5_FEATURES:
-        lines.append(f"- `{feature}`")
-    lines.extend(
-        [
-            "",
-            "Verboden variabelen zoals volume, geldige dagen, coördinaten, gemeente en `location_group_id` zijn niet gebruikt als clusteringfeatures.",
-            "",
-            "## Modelinstellingen",
-            "",
-            "```json",
-            json.dumps(KMEANS_PARAMETERS, indent=2),
-            "```",
-            "",
-            "Features zijn gestandaardiseerd met `StandardScaler`; K-means gebruikt squared Euclidean distance in deze gestandaardiseerde ruimte.",
-            "",
-            "## Resultaten",
-            "",
-            f"- Aantal locatiegroepen in model: `{len(assignments)}`",
-            f"- Rijen verwijderd wegens missende compact5-features: `{rows_removed_missing}`",
-            f"- Inertia: `{model.inertia_:.3f}`",
-            f"- Iteraties: `{model.n_iter_}`",
-            f"- Max iter bereikt: `{model.n_iter_ >= KMEANS_PARAMETERS['max_iter']}`",
-            f"- Overall silhouette: `{overall_silhouette:.3f}`",
-            "",
-            "| Cluster | n | % | silhouette mean | negatieve silhouette | voorzichtige karakterisering | top onderscheidende features |",
-            "|---|---:|---:|---:|---:|---|---|",
-        ]
-    )
-    for row in summary.itertuples(index=False):
-        lines.append(
-            "| "
-            f"{row.cluster_name} | "
-            f"{int(row.n_observations)} | "
-            f"{row.pct_observations * 100:.1f}% | "
-            f"{row.silhouette_mean:.3f} | "
-            f"{row.pct_negative_silhouette * 100:.1f}% | "
-            f"{row.cautious_characterization} | "
-            f"{row.top_distinctive_features_signed} |"
-        )
-    lines.extend(
-        [
-            "",
-            "## Voorzichtige interpretatie",
-            "",
-            "De kleine cluster wordt gekarakteriseerd door relatief hoge seizoensratio's, hogere weekend/weekdagratio en hogere weekend-middag/namiddag-aandelen. "
-            "Daarom is een voorzichtige omschrijving `strongly seasonal / recreational-like temporal pattern` gepast.",
-            "",
-            "De grote cluster is een brede restgroep met minder sterke seizoens- en weekendaccenten. "
-            "Een voorzichtige omschrijving is `broad mixed / less seasonal temporal pattern`.",
-            "",
-            "Gebruik `cluster_id` als primaire identifier. De karakterisering is alleen een hulpmiddel voor interpretatie.",
-            "",
-        ]
-    )
-    REPORT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-
-
 def run_final_model(
     feature_input: Path = FEATURE_INPUT,
     location_groups_input: Path = LOCATION_GROUPS_INPUT,
@@ -339,7 +254,6 @@ def run_final_model(
     silhouette_summary.to_csv(SILHOUETTE_OUTPUT, index=False)
     joblib.dump(model, MODEL_OUTPUT)
     joblib.dump(scaler, SCALER_OUTPUT)
-    write_report(assignments, summary, model, rows_removed_missing)
 
     return {
         "n_rows_input": int(len(features)),
@@ -355,7 +269,6 @@ def run_final_model(
             "silhouette": str(SILHOUETTE_OUTPUT.relative_to(PROJECT_ROOT)),
             "model": str(MODEL_OUTPUT.relative_to(PROJECT_ROOT)),
             "scaler": str(SCALER_OUTPUT.relative_to(PROJECT_ROOT)),
-            "report": str(REPORT_OUTPUT.relative_to(PROJECT_ROOT)),
         },
     }
 
