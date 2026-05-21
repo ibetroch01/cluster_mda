@@ -4,8 +4,6 @@ Coverage and volume variables produced here are for filtering and diagnostics
 only. They must not be used as KMeans clustering features.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
@@ -399,9 +397,17 @@ def run_location_group_quality_report(
     valid_day_threshold: float = VALID_DAY_COVERAGE_THRESHOLD,
 ) -> dict[str, object]:
     """Build and write all location-group quality outputs."""
+    # Quality is used to decide which location groups are reliable enough for
+    # clustering. These variables are diagnostics, not clustering features.
     counts = load_location_counts(input_path)
+
+    # 1. First decide which individual location-group days are valid.
     day_quality = build_location_group_day_quality(counts, valid_day_coverage_threshold=valid_day_threshold)
+
+    # 2. Then summarize valid coverage over the full 2023-2025 period.
     summary = build_location_group_quality_summary(day_quality, counts)
+
+    # 3. Apply the candidate thresholds and save everything for audit.
     eligible = apply_candidate_thresholds(summary, thresholds)
     report = build_report(day_quality, summary, eligible, thresholds, valid_day_threshold)
 

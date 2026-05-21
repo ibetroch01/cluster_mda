@@ -1,7 +1,5 @@
 """Create final static cluster maps for k=2 and exploratory k=3."""
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys

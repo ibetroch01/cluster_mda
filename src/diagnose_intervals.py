@@ -5,8 +5,6 @@ rows. It checks whether non-15-minute count intervals are explainable by the
 Europe/Brussels spring daylight saving time transition.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import re

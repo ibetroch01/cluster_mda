@@ -1,7 +1,5 @@
 """Run KMeans feature-set sensitivity analysis for location-group features."""
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys

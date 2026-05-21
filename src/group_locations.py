@@ -5,8 +5,6 @@ clustering in Belgian Lambert 72 / EPSG:31370. Counts are summed across original
 sites only after preserving interval coverage diagnostics.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
@@ -283,16 +281,25 @@ def run_location_grouping(
     config: LocationGroupingConfig = LocationGroupingConfig(),
 ) -> dict[str, object]:
     """Run site location grouping and count aggregation."""
+    # 1. Read AWV site coordinates. If no explicit path is given, use data/raw.
     sites_input = sites_input.resolve()
     if not sites_input.exists():
         raw_dir = resolve_raw_dir(DEFAULT_RAW_DIR)
         sites_input = raw_dir / "sites.csv"
     sites = load_sites(sites_input)
+
+    # 2. Work in Belgian Lambert coordinates before measuring metres.
     projected = project_sites(sites)
+
+    # 3. Group sites within 100 metres using complete linkage to avoid chaining.
     grouped_sites = complete_linkage_groups(projected, threshold_meters=config.distance_threshold_meters)
     mapping, groups = build_outputs_for_groups(grouped_sites)
+
+    # 4. Sum the already-cleaned site counts to location-group level.
     counts = load_counts(counts_input)
     location_counts, missing_group_rows = aggregate_location_counts(counts, mapping)
+
+    # 5. Save both the mapping and the aggregated time series for auditability.
     report = build_report(
         sites=sites,
         grouped_sites=grouped_sites,

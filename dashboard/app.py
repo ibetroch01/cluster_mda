@@ -1,7 +1,5 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -77,20 +75,6 @@ K3_LABELS = {
 }
 
 
-@dataclass(frozen=True)
-class DashboardData:
-    ready: bool
-    missing_files: tuple[str, ...]
-    k2: pd.DataFrame
-    k3: pd.DataFrame
-    quality: pd.DataFrame
-    hourly_profile: pd.DataFrame
-    weekday_profile: pd.DataFrame
-    monthly_profile: pd.DataFrame
-    cluster_profiles: dict[str, dict[str, pd.DataFrame]]
-    summaries: dict[str, pd.DataFrame]
-
-
 def _read_csv(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
 
@@ -139,7 +123,7 @@ def _standardize_k3(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def _model_df(data: DashboardData, model: str) -> pd.DataFrame:
+def _model_df(data, model: str) -> pd.DataFrame:
     return data.k3 if model == "k3" else data.k2
 
 
@@ -219,11 +203,23 @@ def _cluster_expectations(
     return {"hourly": hourly, "weekday": weekday, "monthly": monthly}
 
 
-def _load_data() -> DashboardData:
+def _load_data():
+    # Keep the dashboard simple: it only reads prepared outputs from the pipeline.
     missing = tuple(str(path.relative_to(PROJECT_ROOT)) for path in _required_files() if not path.exists())
     if missing:
         empty = pd.DataFrame()
-        return DashboardData(False, missing, empty, empty, empty, empty, empty, empty, {}, {})
+        return SimpleNamespace(
+            ready=False,
+            missing_files=missing,
+            k2=empty,
+            k3=empty,
+            quality=empty,
+            hourly_profile=empty,
+            weekday_profile=empty,
+            monthly_profile=empty,
+            cluster_profiles={},
+            summaries={},
+        )
 
     k2 = _standardize_k2(_read_csv(K2_CLUSTERS))
     k3 = _standardize_k3(_read_csv(K3_CLUSTERS))
@@ -246,17 +242,17 @@ def _load_data() -> DashboardData:
         "k2": _read_csv(FINAL_SUMMARY),
         "k3": _read_csv(K3_SUMMARY),
     }
-    return DashboardData(
-        True,
-        missing,
-        k2,
-        k3,
-        quality,
-        hourly_profile,
-        weekday_profile,
-        monthly_profile,
-        cluster_profiles,
-        summaries,
+    return SimpleNamespace(
+        ready=True,
+        missing_files=missing,
+        k2=k2,
+        k3=k3,
+        quality=quality,
+        hourly_profile=hourly_profile,
+        weekday_profile=weekday_profile,
+        monthly_profile=monthly_profile,
+        cluster_profiles=cluster_profiles,
+        summaries=summaries,
     )
 
 

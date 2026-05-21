@@ -1,7 +1,5 @@
 """Create interactive Leaflet maps for final k=2 and exploratory k=3 clusters."""
 
-from __future__ import annotations
-
 import argparse
 import sys
 from pathlib import Path

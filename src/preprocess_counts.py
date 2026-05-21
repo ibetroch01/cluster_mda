@@ -6,8 +6,6 @@ single measurement intervals using their start timestamp. It does not split,
 divide, or impute intervals.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import re
@@ -452,6 +450,8 @@ def run_preprocessing(
     if not files:
         raise DataInspectionError(f"No monthly count CSV files found in {raw_dir}")
 
+    # The monthly files are processed one by one so that warnings can still be
+    # written even if one source file has a problem.
     metadata = load_metadata(raw_dir)
     processed_frames: list[pd.DataFrame] = []
     anomalous_frames: list[pd.DataFrame] = []
@@ -468,6 +468,7 @@ def run_preprocessing(
 
     for index, path in enumerate(files, start=1):
         try:
+            # 1. Read one month and keep only cyclist counts in the study period.
             raw = load_count_file(path)
             loaded_rows += len(raw)
             filtered = normalize_and_filter_counts(raw)
@@ -476,6 +477,7 @@ def run_preprocessing(
                 print(f"[{index}/{len(files)}] {path.name}: no rows after date/type filter", flush=True)
                 continue
 
+            # 2. Add time variables and separate warning rows from usable rows.
             filtered = add_time_columns(filtered)
             anomalous = filtered.loc[~filtered["interval_status"].isin(VALID_INTERVAL_STATUSES)].copy()
             append_warning_frame(anomalous_frames, anomalous)
@@ -486,6 +488,7 @@ def run_preprocessing(
             if not invalid_minutes.empty:
                 valid = valid.loc[valid["minute"].isin(VALID_MINUTES)].copy()
 
+            # 3. Negative counts are not used in the main time series.
             negative = valid.loc[valid["aantal"].lt(0)].copy()
             append_warning_frame(negative_frames, negative)
             if not negative.empty:
@@ -500,10 +503,12 @@ def run_preprocessing(
             add_counter(interval_status_counts_kept, valid["interval_status"])
             minute_values_kept.update(int(value) for value in valid["minute"].dropna().unique().tolist())
 
+            # 4. Keep duplicate diagnostics before summing directions.
             duplicate = build_duplicate_diagnostics(valid)
             if not duplicate.empty:
                 duplicate_frames.append(duplicate)
 
+            # 5. Sum directions to obtain one site-level count per timestamp.
             processed_frames.append(aggregate_site_level(valid))
             print(
                 f"[{index}/{len(files)}] {path.name}: filtered={len(filtered):,}, valid={len(valid):,}, "
@@ -516,6 +521,8 @@ def run_preprocessing(
     if not processed_frames:
         raise DataInspectionError("No valid FIETSERS rows found in selected date range")
 
+    # A final groupby is a safety net in case a site-month boundary creates
+    # duplicate site timestamps after the per-file processing.
     processed = pd.concat(processed_frames, ignore_index=True)
     if bool(processed.duplicated(["site_id", "interval_start"]).any()):
         processed = (

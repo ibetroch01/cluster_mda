@@ -1,7 +1,5 @@
 """Audit PCA and centroid-distance outliers in the final compact5 k=2 model."""
 
-from __future__ import annotations
-
 import argparse
 import sys
 from pathlib import Path

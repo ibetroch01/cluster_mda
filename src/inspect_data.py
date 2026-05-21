@@ -5,8 +5,6 @@ normalizes detected column names, checks count date ranges and intervals, and
 writes a compact JSON schema summary for downstream pipeline design.
 """
 
-from __future__ import annotations
-
 import argparse
 import csv
 import json

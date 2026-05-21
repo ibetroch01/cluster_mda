@@ -1,7 +1,5 @@
 """Explore global k=3 KMeans compared with the final k=2 compact5 model."""
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys

@@ -5,8 +5,6 @@ pattern features. Absolute volume, geography, identifiers, and data-quality
 variables are kept as diagnostics only.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import math
@@ -389,12 +387,15 @@ def run_feature_engineering(
     report_output: Path = DEFAULT_REPORT_OUTPUT,
 ) -> dict[str, object]:
     """Run location-group feature engineering and write outputs."""
+    # 1. Load cleaned counts, valid-day information and the eligible groups.
     counts, day_quality, eligible, location_groups = load_inputs(
         counts_input,
         day_quality_input,
         eligible_input,
         location_groups_input,
     )
+
+    # 2. Use only eligible location groups and valid days with positive totals.
     eligible_ids = set(eligible.loc[eligible["eligible_location_group"], "location_group_id"].astype(str))
     valid_positive_days = day_quality.loc[
         day_quality["location_group_id"].astype(str).isin(eligible_ids)
@@ -402,8 +403,15 @@ def run_feature_engineering(
         & (day_quality["daily_total"] > 0)
     ].copy()
     counts = counts.loc[counts["location_group_id"].astype(str).isin(eligible_ids)].copy()
+
+    # 3. Compute shares per day first. This keeps high-volume days from
+    # dominating the feature values.
     day_features = build_day_feature_rows(counts, valid_positive_days)
+
+    # 4. Average the day-level indicators to location-group features.
     feature_table = build_location_features(day_features, valid_positive_days, eligible, location_groups)
+
+    # 5. Defensive check: the selected feature matrix must stay pattern-based.
     assert_valid_kmeans_features(SELECTED_KMEANS_FEATURES, feature_table)
     report = build_report(feature_table, eligible, day_features)
 
