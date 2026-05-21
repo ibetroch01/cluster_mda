@@ -180,35 +180,46 @@ Model-selection audit scripts:
 make model-selection
 ```
 
-## 6. Dashboarding Results
+## 6. Results
 
-The results stage prepares figures, maps, and interactive outputs for presenting
-the final model and the exploratory `k = 3` comparison.
+The results stage prepares static figures, maps, and tables for the report and
+presentation. These outputs summarize the final model and the exploratory
+`k = 3` comparison, but they do not start the interactive app.
 
-Dashboard-result scripts:
+Result scripts:
 
 - `src/create_final_cluster_visualizations.py` creates feature profile, hourly,
   weekend, monthly, PCA, and detail figures/tables.
-- `src/create_final_cluster_maps.py` creates static cluster maps.
-- `src/create_leaflet_cluster_maps.py` creates interactive Leaflet maps.
+- `src/create_final_cluster_maps.py` creates static basemap cluster maps for the
+  report.
 
 ```bash
-make dashboard-results
+make results
 ```
 
-`make results` is kept as a backwards-compatible alias.
+## 7. Dashboard
 
-The dashboard is built with Shiny for Python and reads prepared outputs only. It
-does not recompute the full analysis.
+The dashboard is the interactive presentation layer. It reads prepared outputs
+only and does not recompute the full analysis.
 
+Dashboard assets and app:
+
+- `src/create_leaflet_cluster_maps.py` creates interactive Leaflet maps.
 - `dashboard/app.py` provides an interactive map, counter overview profiles, and
   additional cluster exploration visuals.
+
+```bash
+make dashboard-assets
+```
 
 ```bash
 make dashboard
 ```
 
 `make app` is kept as a shorter alias for the same command.
+
+`make dashboard-results` is kept as a backwards-compatible alias that runs both
+`make results` and `make dashboard-assets`.
 
 ## Extra: Version Control
 
@@ -254,7 +265,8 @@ make clean-data
 make features
 make model-building
 make model-selection
-make dashboard-results
+make results
+make dashboard-assets
 make dashboard
 ```
 

@@ -1,7 +1,6 @@
 """Explore global k=3 KMeans compared with the final k=2 compact5 model."""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -10,6 +9,16 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
 from sklearn.preprocessing import StandardScaler
+
+from plot_style import (
+    CLUSTER_COLORS,
+    FEATURE_LABELS,
+    K3_CLUSTER_LABELS,
+    MONTH_LABELS,
+    clean_axes,
+    save_figure,
+    setup_matplotlib,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FEATURE_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_candidate.csv"
@@ -46,21 +55,10 @@ KMEANS_PARAMETERS = {
     "random_state": 42,
 }
 COLORS = {
-    0: "#4C78A8",
-    1: "#F58518",
-    2: "#54A24B",
+    0: CLUSTER_COLORS["mixed"],
+    1: CLUSTER_COLORS["seasonal"],
+    2: CLUSTER_COLORS["commuter"],
 }
-
-
-def setup_matplotlib():
-    """Import matplotlib using a local writable cache."""
-    os.environ.setdefault("MPLCONFIGDIR", str(PROJECT_ROOT / ".matplotlib-cache"))
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    return plt
 
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -280,30 +278,31 @@ def build_broad_feature_differences(broad_summary: pd.DataFrame, merged: pd.Data
 
 def plot_standardized_profile(summary: pd.DataFrame, output: Path, title: str) -> None:
     """Plot standardized feature means by cluster."""
-    plt = setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(10, 5.5))
-    x = np.arange(len(COMPACT5_FEATURES))
-    width = min(0.26, 0.75 / len(summary))
+    plt, _ = setup_matplotlib()
+    fig, ax = plt.subplots(figsize=(9.4, 5.6))
+    y = np.arange(len(COMPACT5_FEATURES))
+    height = min(0.24, 0.75 / len(summary))
     for idx, row in enumerate(summary.sort_values("k3_cluster_id").itertuples(index=False)):
-        offset = (idx - (len(summary) - 1) / 2) * width
+        offset = (idx - (len(summary) - 1) / 2) * height
         values = [getattr(row, f"z_mean_{feature}") for feature in COMPACT5_FEATURES]
-        ax.bar(
-            x + offset,
+        cluster_id = int(row.k3_cluster_id)
+        ax.barh(
+            y + offset,
             values,
-            width=width,
-            color=COLORS.get(int(row.k3_cluster_id)),
-            label=f"cluster_{int(row.k3_cluster_id)}",
+            height=height,
+            color=COLORS.get(cluster_id),
+            label=f"{K3_CLUSTER_LABELS.get(cluster_id, f'cluster_{cluster_id}')} (n={int(getattr(row, 'n_observations', getattr(row, 'n_location_groups', 0)))})",
+            alpha=0.95,
         )
-    ax.axhline(0, color="#222222", linewidth=1)
-    ax.set_xticks(x)
-    ax.set_xticklabels(COMPACT5_FEATURES, rotation=35, ha="right")
-    ax.set_ylabel("Mean standardized feature value")
+    ax.axvline(0, color="#333333", linewidth=1.1)
+    ax.set_yticks(y)
+    ax.set_yticklabels([FEATURE_LABELS[feature].replace("\n", " ") for feature in COMPACT5_FEATURES])
+    ax.set_xlabel("Mean standardized feature value (z-score)")
     ax.set_title(title)
-    ax.grid(axis="y", alpha=0.25)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=180)
+    clean_axes(ax, grid_axis="x")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.34), ncol=1)
+    fig.subplots_adjust(bottom=0.30, left=0.28)
+    save_figure(fig, output)
     plt.close(fig)
 
 
@@ -351,26 +350,29 @@ def location_level_hourly_profiles(counts: pd.DataFrame, assignments: pd.DataFra
 
 def plot_hourly_profile(profile: pd.DataFrame, output: Path, title: str) -> None:
     """Plot hourly profile by k=3 cluster."""
-    plt = setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(10, 5))
+    plt, PercentFormatter = setup_matplotlib()
+    fig, ax = plt.subplots(figsize=(9.6, 5.2))
     for cluster_id, rows in profile.groupby("k3_cluster_id", sort=True):
+        cluster_id = int(cluster_id)
         ax.plot(
             rows["hour"],
             rows["mean_hourly_share"],
             marker="o",
-            linewidth=2,
-            color=COLORS.get(int(cluster_id)),
-            label=f"cluster_{int(cluster_id)}",
+            markersize=4.6,
+            linewidth=2.3,
+            color=COLORS.get(cluster_id),
+            label=K3_CLUSTER_LABELS.get(cluster_id, f"cluster_{cluster_id}"),
         )
-    ax.set_xticks(range(0, 24, 2))
+    ax.set_xticks(range(0, 24, 3))
+    ax.set_xlim(0, 23)
     ax.set_xlabel("Hour of day")
     ax.set_ylabel("Average hourly share of daily count")
     ax.set_title(title)
-    ax.grid(alpha=0.25)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=180)
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.30), ncol=1)
+    fig.subplots_adjust(bottom=0.27)
+    save_figure(fig, output)
     plt.close(fig)
 
 
@@ -399,51 +401,57 @@ def monthly_profile(valid_days: pd.DataFrame, assignments: pd.DataFrame) -> pd.D
 
 def plot_monthly_profile(profile: pd.DataFrame) -> None:
     """Plot normalized monthly profile by k=3 cluster."""
-    plt = setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(10, 5))
+    plt, PercentFormatter = setup_matplotlib()
+    fig, ax = plt.subplots(figsize=(9.6, 5.2))
     for cluster_id, rows in profile.groupby("k3_cluster_id", sort=True):
+        cluster_id = int(cluster_id)
         ax.plot(
             rows["month"],
             rows["mean_normalized_monthly_profile"],
             marker="o",
-            linewidth=2,
-            color=COLORS.get(int(cluster_id)),
-            label=f"cluster_{int(cluster_id)}",
+            markersize=4.8,
+            linewidth=2.3,
+            color=COLORS.get(cluster_id),
+            label=K3_CLUSTER_LABELS.get(cluster_id, f"cluster_{cluster_id}"),
         )
-    ax.axhline(1, color="#333333", linewidth=1, linestyle="--")
+    ax.axhline(1, color="#333333", linewidth=1, linestyle="--", alpha=0.8)
     ax.set_xticks(range(1, 13))
+    ax.set_xticklabels(MONTH_LABELS)
     ax.set_xlabel("Month")
-    ax.set_ylabel("Mean daily count relative to location mean")
+    ax.set_ylabel("Relative mean daily count")
     ax.set_title("Exploratory k=3 normalized monthly profile")
-    ax.grid(alpha=0.25)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    FIG_MONTHLY.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIG_MONTHLY, dpi=180)
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.30), ncol=1)
+    fig.subplots_adjust(bottom=0.27)
+    save_figure(fig, FIG_MONTHLY)
     plt.close(fig)
 
 
 def plot_transition_heatmap(transition: pd.DataFrame) -> None:
     """Plot k2 to k3 transition heatmap."""
-    plt = setup_matplotlib()
+    plt, _ = setup_matplotlib()
     table = transition.pivot(index="k2_cluster_id", columns="k3_cluster_id", values="n_location_groups").fillna(0)
-    fig, ax = plt.subplots(figsize=(7, 4.8))
-    image = ax.imshow(table.to_numpy(), cmap="Blues")
+    fig, ax = plt.subplots(figsize=(7.3, 4.8))
+    image = ax.imshow(table.to_numpy(), cmap="Blues", vmin=0)
     ax.set_xticks(range(len(table.columns)))
-    ax.set_xticklabels([f"k3 cluster_{int(c)}" for c in table.columns])
+    ax.set_xticklabels([f"k=3\ncluster {int(c)}" for c in table.columns])
     ax.set_yticks(range(len(table.index)))
-    ax.set_yticklabels([f"k2 cluster_{int(i)}" for i in table.index])
+    ax.set_yticklabels([f"k=2 cluster {int(i)}" for i in table.index])
     ax.set_xlabel("Exploratory k=3 cluster")
     ax.set_ylabel("Final k=2 cluster")
     ax.set_title("Transition from final k=2 to exploratory k=3")
     for i, k2_id in enumerate(table.index):
         for j, k3_id in enumerate(table.columns):
             value = int(table.loc[k2_id, k3_id])
-            ax.text(j, i, str(value), ha="center", va="center", color="#222222")
+            pct = transition.loc[
+                (transition["k2_cluster_id"] == k2_id) & (transition["k3_cluster_id"] == k3_id),
+                "pct_of_k2_cluster",
+            ].iloc[0]
+            label = f"{value}\n({pct:.0%})" if value else "0"
+            ax.text(j, i, label, ha="center", va="center", color="#222222", fontsize=10)
     fig.colorbar(image, ax=ax, shrink=0.85, label="Location groups")
-    fig.tight_layout()
-    FIG_HEATMAP.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIG_HEATMAP, dpi=180)
+    save_figure(fig, FIG_HEATMAP)
     plt.close(fig)
 
 

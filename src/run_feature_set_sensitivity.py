@@ -11,11 +11,14 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
 from sklearn.preprocessing import StandardScaler
 
+from plot_style import CLUSTER_COLORS, clean_axes, save_figure, setup_matplotlib
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_candidate.csv"
 DIAGNOSTICS_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_kmeans_diagnostics.csv"
 MODEL_COMPARISON_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_model_comparison.csv"
 CLUSTER_PROFILES_OUTPUT = PROJECT_ROOT / "outputs" / "feature_set_cluster_profiles.csv"
+SENSITIVITY_FIG = PROJECT_ROOT / "outputs" / "fig_feature_set_sensitivity.png"
 
 KMEANS_PARAMETERS = {
     "init": "k-means++",
@@ -223,6 +226,51 @@ def fit_candidate_models(
     return pd.DataFrame.from_records(model_records), pd.DataFrame.from_records(profile_records)
 
 
+def plot_sensitivity(model_comparison: pd.DataFrame) -> None:
+    """Plot silhouette scores for the feature-set sensitivity check."""
+    plt, _ = setup_matplotlib()
+    plot_data = model_comparison.sort_values(["feature_set", "k"]).copy()
+    feature_sets = ["full9", "core7_no_optional", "compact5"]
+    k_values = sorted(plot_data["k"].unique())
+    x = np.arange(len(feature_sets))
+    width = 0.34
+    colors = {2: CLUSTER_COLORS["regular"], 3: CLUSTER_COLORS["seasonal"]}
+
+    fig, ax = plt.subplots(figsize=(8.4, 5.2))
+    for index, k in enumerate(k_values):
+        subset = plot_data.loc[plot_data["k"] == k].set_index("feature_set").reindex(feature_sets)
+        offset = (index - (len(k_values) - 1) / 2) * width
+        bars = ax.bar(
+            x + offset,
+            subset["silhouette_score_overall"],
+            width=width,
+            color=colors.get(k, CLUSTER_COLORS["grey"]),
+            label=f"k = {k}",
+            alpha=0.95,
+        )
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                height + 0.012,
+                f"{height:.3f}",
+                ha="center",
+                va="bottom",
+                fontsize=9,
+            )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(["full9", "core7\n(no optional)", "compact5"])
+    ax.set_ylim(0, max(0.68, plot_data["silhouette_score_overall"].max() + 0.08))
+    ax.set_ylabel("Overall silhouette score")
+    ax.set_title("Feature-set sensitivity of candidate K-means models")
+    clean_axes(ax, grid_axis="y")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.25), ncol=2)
+    fig.subplots_adjust(bottom=0.22)
+    save_figure(fig, SENSITIVITY_FIG)
+    plt.close(fig)
+
+
 def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
     """Run the full feature-set sensitivity workflow."""
     features = load_features(input_path)
@@ -242,11 +290,12 @@ def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
     model_comparison = pd.concat(all_model_comparisons, ignore_index=True)
     cluster_profiles = pd.concat(all_profiles, ignore_index=True)
 
-    for path in [DIAGNOSTICS_OUTPUT, MODEL_COMPARISON_OUTPUT, CLUSTER_PROFILES_OUTPUT]:
+    for path in [DIAGNOSTICS_OUTPUT, MODEL_COMPARISON_OUTPUT, CLUSTER_PROFILES_OUTPUT, SENSITIVITY_FIG]:
         path.parent.mkdir(parents=True, exist_ok=True)
     diagnostics.to_csv(DIAGNOSTICS_OUTPUT, index=False)
     model_comparison.to_csv(MODEL_COMPARISON_OUTPUT, index=False)
     cluster_profiles.to_csv(CLUSTER_PROFILES_OUTPUT, index=False)
+    plot_sensitivity(model_comparison)
 
     return {
         "n_rows_input": int(len(features)),
@@ -255,6 +304,7 @@ def run_sensitivity(input_path: Path = DEFAULT_INPUT) -> dict[str, object]:
             "diagnostics": str(DIAGNOSTICS_OUTPUT.relative_to(PROJECT_ROOT)),
             "model_comparison": str(MODEL_COMPARISON_OUTPUT.relative_to(PROJECT_ROOT)),
             "cluster_profiles": str(CLUSTER_PROFILES_OUTPUT.relative_to(PROJECT_ROOT)),
+            "sensitivity_figure": str(SENSITIVITY_FIG.relative_to(PROJECT_ROOT)),
         },
     }
 

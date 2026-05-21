@@ -1,12 +1,23 @@
 """Create final visualizations for AWV KMeans location-group clusters."""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
+
+from plot_style import (
+    CLUSTER_COLORS,
+    FEATURE_LABELS,
+    K2_CLUSTER_LABELS,
+    MONTH_LABELS,
+    add_note,
+    clean_axes,
+    save_figure,
+    setup_matplotlib,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CLUSTERS_INPUT = PROJECT_ROOT / "data" / "processed" / "final_location_group_clusters_k2_compact5.csv"
@@ -18,6 +29,7 @@ RAW_FEATURE_TABLE = PROJECT_ROOT / "outputs" / "table_raw_feature_summary_k2.csv
 WEEKDAY_PROFILE_FIG = PROJECT_ROOT / "outputs" / "fig_weekday_hourly_profile_k2.png"
 WEEKEND_PROFILE_FIG = PROJECT_ROOT / "outputs" / "fig_weekend_hourly_profile_k2.png"
 MONTHLY_PROFILE_FIG = PROJECT_ROOT / "outputs" / "fig_monthly_seasonal_profile_k2.png"
+PCA_FIG = PROJECT_ROOT / "outputs" / "fig_pca2_clusters_k2_compact5.png"
 MAP_FIG = PROJECT_ROOT / "outputs" / "fig_location_groups_map_k2.png"
 SMALL_CLUSTER_TABLE = PROJECT_ROOT / "outputs" / "small_cluster_detail_k2.csv"
 
@@ -28,21 +40,10 @@ COMPACT5_FEATURES = [
     "weekend_midday_afternoon_share",
     "log_summer_winter_ratio",
 ]
-CLUSTER_COLORS = {
-    0: "#4C78A8",
-    1: "#F58518",
+K2_COLORS = {
+    0: CLUSTER_COLORS["regular"],
+    1: CLUSTER_COLORS["seasonal"],
 }
-
-
-def setup_matplotlib():
-    """Import matplotlib with a writable local cache."""
-    os.environ.setdefault("MPLCONFIGDIR", str(PROJECT_ROOT / ".matplotlib-cache"))
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    return plt
 
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -95,33 +96,35 @@ def raw_feature_summary(clusters: pd.DataFrame) -> pd.DataFrame:
 
 def plot_feature_profile(clusters: pd.DataFrame) -> None:
     """Plot mean standardized compact5 feature values by cluster."""
-    plt = setup_matplotlib()
+    plt, _ = setup_matplotlib()
     z_features = [f"z_{feature}" for feature in COMPACT5_FEATURES]
     profile = clusters.groupby("cluster_id")[z_features].mean().rename(
         columns={f"z_{feature}": feature for feature in COMPACT5_FEATURES}
     )
-    x = np.arange(len(COMPACT5_FEATURES))
-    width = 0.36
-    fig, ax = plt.subplots(figsize=(10, 5.5))
+    y = np.arange(len(COMPACT5_FEATURES))
+    height = 0.34
+    fig, ax = plt.subplots(figsize=(9.4, 5.4))
+
     for offset_index, (cluster_id, row) in enumerate(profile.iterrows()):
-        offset = (offset_index - (len(profile) - 1) / 2) * width
-        ax.bar(
-            x + offset,
+        offset = (offset_index - (len(profile) - 1) / 2) * height
+        ax.barh(
+            y + offset,
             row[COMPACT5_FEATURES].to_numpy(),
-            width=width,
-            label=f"cluster_{int(cluster_id)}",
-            color=CLUSTER_COLORS.get(int(cluster_id)),
+            height=height,
+            label=f"{K2_CLUSTER_LABELS[int(cluster_id)]} (n={int((clusters['cluster_id'] == cluster_id).sum())})",
+            color=K2_COLORS.get(int(cluster_id)),
+            alpha=0.95,
         )
-    ax.axhline(0, color="#222222", linewidth=1)
-    ax.set_xticks(x)
-    ax.set_xticklabels(COMPACT5_FEATURES, rotation=35, ha="right")
-    ax.set_ylabel("Mean standardized feature value")
-    ax.set_title("Standardized compact5 feature profile by cluster")
-    ax.legend(frameon=False)
-    ax.grid(axis="y", alpha=0.25)
-    fig.tight_layout()
-    FEATURE_PROFILE_FIG.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FEATURE_PROFILE_FIG, dpi=180)
+
+    ax.axvline(0, color="#333333", linewidth=1.1)
+    ax.set_yticks(y)
+    ax.set_yticklabels([FEATURE_LABELS[feature].replace("\n", " ") for feature in COMPACT5_FEATURES])
+    ax.set_xlabel("Mean standardized feature value (z-score)")
+    ax.set_title("Final k=2 compact5 feature profile")
+    clean_axes(ax, grid_axis="x")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.28), ncol=1)
+    fig.subplots_adjust(bottom=0.24, left=0.28)
+    save_figure(fig, FEATURE_PROFILE_FIG)
     plt.close(fig)
 
 
@@ -186,26 +189,28 @@ def location_level_hourly_profiles(
 
 def plot_hourly_profile(profile: pd.DataFrame, title: str, output: Path) -> None:
     """Plot hourly cluster profiles."""
-    plt = setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(10, 5))
+    plt, PercentFormatter = setup_matplotlib()
+    fig, ax = plt.subplots(figsize=(9.6, 5.2))
     for cluster_id, rows in profile.groupby("cluster_id", sort=True):
         ax.plot(
             rows["hour"],
             rows["mean_hourly_share"],
             marker="o",
-            linewidth=2,
-            label=f"cluster_{int(cluster_id)}",
-            color=CLUSTER_COLORS.get(int(cluster_id)),
+            markersize=4.8,
+            linewidth=2.4,
+            label=K2_CLUSTER_LABELS[int(cluster_id)],
+            color=K2_COLORS.get(int(cluster_id)),
         )
-    ax.set_xticks(range(0, 24, 2))
+    ax.set_xticks(range(0, 24, 3))
+    ax.set_xlim(0, 23)
     ax.set_xlabel("Hour of day")
     ax.set_ylabel("Average hourly share of daily count")
     ax.set_title(title)
-    ax.grid(alpha=0.25)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=180)
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.27), ncol=2)
+    fig.subplots_adjust(bottom=0.24)
+    save_figure(fig, output)
     plt.close(fig)
 
 
@@ -239,33 +244,70 @@ def monthly_profile(
 
 def plot_monthly_profile(profile: pd.DataFrame) -> None:
     """Plot normalized monthly seasonal profile."""
-    plt = setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(10, 5))
+    plt, PercentFormatter = setup_matplotlib()
+    fig, ax = plt.subplots(figsize=(9.6, 5.2))
     for cluster_id, rows in profile.groupby("cluster_id", sort=True):
         ax.plot(
             rows["month"],
             rows["mean_normalized_monthly_profile"],
             marker="o",
-            linewidth=2,
-            label=f"cluster_{int(cluster_id)}",
-            color=CLUSTER_COLORS.get(int(cluster_id)),
+            markersize=5,
+            linewidth=2.4,
+            label=K2_CLUSTER_LABELS[int(cluster_id)],
+            color=K2_COLORS.get(int(cluster_id)),
         )
-    ax.axhline(1, color="#333333", linewidth=1, linestyle="--")
+    ax.axhline(1, color="#333333", linewidth=1, linestyle="--", alpha=0.8)
     ax.set_xticks(range(1, 13))
+    ax.set_xticklabels(MONTH_LABELS)
     ax.set_xlabel("Month")
-    ax.set_ylabel("Mean daily count relative to location mean")
-    ax.set_title("Normalized monthly seasonal profile by cluster")
-    ax.grid(alpha=0.25)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    MONTHLY_PROFILE_FIG.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(MONTHLY_PROFILE_FIG, dpi=180)
+    ax.set_ylabel("Relative mean daily count")
+    ax.set_title("Monthly seasonal profile by final k=2 cluster")
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.27), ncol=2)
+    fig.subplots_adjust(bottom=0.24)
+    save_figure(fig, MONTHLY_PROFILE_FIG)
+    plt.close(fig)
+
+
+def plot_pca(clusters: pd.DataFrame) -> None:
+    """Plot a PCA projection of the standardized compact5 space."""
+    plt, _ = setup_matplotlib()
+    z_features = [f"z_{feature}" for feature in COMPACT5_FEATURES]
+    pca = PCA(n_components=2, random_state=42)
+    coords = pca.fit_transform(clusters[z_features])
+    plot_data = clusters[["location_group_id", "cluster_id"]].copy()
+    plot_data["pc1"] = coords[:, 0]
+    plot_data["pc2"] = coords[:, 1]
+
+    fig, ax = plt.subplots(figsize=(7.8, 6.4))
+    for cluster_id, rows in plot_data.groupby("cluster_id", sort=True):
+        ax.scatter(
+            rows["pc1"],
+            rows["pc2"],
+            s=58 if len(rows) > 10 else 82,
+            color=K2_COLORS.get(int(cluster_id)),
+            edgecolor="white",
+            linewidth=0.7,
+            alpha=0.9,
+            label=f"{K2_CLUSTER_LABELS[int(cluster_id)]} (n={len(rows)})",
+        )
+    ax.axhline(0, color="#B8BEC7", linewidth=0.8)
+    ax.axvline(0, color="#B8BEC7", linewidth=0.8)
+    ax.set_xlabel(f"PC1 ({pca.explained_variance_ratio_[0] * 100:.1f}% variance)")
+    ax.set_ylabel(f"PC2 ({pca.explained_variance_ratio_[1] * 100:.1f}% variance)")
+    ax.set_title("PCA view of standardized compact5 clustering space")
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.23), ncol=1)
+    add_note(fig, "PCA is used for visualization only; K-means was fitted in the full five-feature standardized space.")
+    fig.subplots_adjust(bottom=0.22)
+    save_figure(fig, PCA_FIG)
     plt.close(fig)
 
 
 def plot_map(clusters: pd.DataFrame, location_groups: pd.DataFrame) -> None:
     """Plot location groups by cluster using coordinates for interpretation."""
-    plt = setup_matplotlib()
+    plt, _ = setup_matplotlib()
     if "mean_longitude" not in clusters.columns or "mean_latitude" not in clusters.columns:
         clusters = clusters.merge(
             location_groups[["location_group_id", "mean_longitude", "mean_latitude"]],
@@ -273,34 +315,26 @@ def plot_map(clusters: pd.DataFrame, location_groups: pd.DataFrame) -> None:
             how="left",
         )
     plot_data = clusters.dropna(subset=["mean_longitude", "mean_latitude"]).copy()
-    fig, ax = plt.subplots(figsize=(7.5, 8))
+    fig, ax = plt.subplots(figsize=(7.4, 7.8))
     for cluster_id, rows in plot_data.groupby("cluster_id", sort=True):
         ax.scatter(
             rows["mean_longitude"],
             rows["mean_latitude"],
             s=46 if len(rows) > 10 else 70,
-            alpha=0.82,
-            color=CLUSTER_COLORS.get(int(cluster_id)),
+            alpha=0.9,
+            color=K2_COLORS.get(int(cluster_id)),
             edgecolor="white",
             linewidth=0.6,
-            label=f"cluster_{int(cluster_id)}",
+            label=f"{K2_CLUSTER_LABELS[int(cluster_id)]} (n={len(rows)})",
         )
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
-    ax.set_title("AWV location groups by final KMeans cluster")
-    ax.text(
-        0.01,
-        0.01,
-        "Coordinates shown for interpretation only; not used as clustering features.",
-        transform=ax.transAxes,
-        fontsize=8,
-        va="bottom",
-    )
-    ax.grid(alpha=0.2)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    MAP_FIG.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(MAP_FIG, dpi=180)
+    ax.set_title("AWV location groups by final k=2 cluster")
+    clean_axes(ax, grid_axis="both")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.20), ncol=1)
+    add_note(fig, "Coordinates are shown for interpretation only; they were not used as clustering features.")
+    fig.subplots_adjust(bottom=0.18)
+    save_figure(fig, MAP_FIG)
     plt.close(fig)
 
 
@@ -338,6 +372,7 @@ def run_visualizations() -> dict[str, object]:
 
     monthly = monthly_profile(valid_days, clusters)
     plot_monthly_profile(monthly)
+    plot_pca(clusters)
     plot_map(clusters, location_groups)
 
     small = small_cluster_detail(clusters)
@@ -354,6 +389,7 @@ def run_visualizations() -> dict[str, object]:
             "weekday_hourly_profile": str(WEEKDAY_PROFILE_FIG.relative_to(PROJECT_ROOT)),
             "weekend_hourly_profile": str(WEEKEND_PROFILE_FIG.relative_to(PROJECT_ROOT)),
             "monthly_profile": str(MONTHLY_PROFILE_FIG.relative_to(PROJECT_ROOT)),
+            "pca": str(PCA_FIG.relative_to(PROJECT_ROOT)),
             "map": str(MAP_FIG.relative_to(PROJECT_ROOT)),
             "small_cluster_table": str(SMALL_CLUSTER_TABLE.relative_to(PROJECT_ROOT)),
         },

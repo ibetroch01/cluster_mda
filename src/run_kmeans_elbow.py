@@ -7,7 +7,6 @@ the script does not automatically choose k.
 
 import argparse
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +17,8 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
+
+from plot_style import CLUSTER_COLORS, add_note, clean_axes, save_figure, setup_matplotlib
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -136,18 +137,22 @@ def run_elbow(scaled_features, max_k=10):
 
 
 def save_elbow_plot(results, output_path):
-    os.environ.setdefault("MPLCONFIGDIR", str(PROJECT_ROOT / ".matplotlib-cache"))
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig, ax1 = plt.subplots(figsize=(8, 5))
-    ax1.plot(results["k"], results["inertia"], marker="o", linewidth=2, color="#1f77b4")
+    plt, _ = setup_matplotlib()
+    fig, ax1 = plt.subplots(figsize=(8.6, 5.2))
+    ax1.plot(
+        results["k"],
+        results["inertia"],
+        marker="o",
+        markersize=5,
+        linewidth=2.4,
+        color=CLUSTER_COLORS["regular"],
+        label="Inertia",
+    )
     ax1.set_xlabel("Number of clusters (k)")
     ax1.set_ylabel("Inertia")
     ax1.set_title("K-means elbow diagnostic")
-    ax1.grid(True, alpha=0.25)
+    ax1.set_xticks(results["k"])
+    clean_axes(ax1, grid_axis="both")
 
     ax2 = ax1.twinx()
     ax2.plot(
@@ -155,20 +160,21 @@ def save_elbow_plot(results, output_path):
         results["relative_inertia_improvement"],
         marker="s",
         linestyle="--",
-        linewidth=1.5,
-        color="#d62728",
+        markersize=4.6,
+        linewidth=1.8,
+        color=CLUSTER_COLORS["seasonal"],
+        label="Relative improvement",
     )
     ax2.set_ylabel("Relative inertia improvement")
+    ax2.spines["right"].set_visible(True)
+    ax2.grid(False)
 
-    fig.text(
-        0.5,
-        0.01,
-        "Diagnostic only: K-means uses squared Euclidean distance after standardisation.",
-        ha="center",
-        fontsize=9,
-    )
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
-    fig.savefig(output_path, dpi=180)
+    lines = ax1.get_lines() + ax2.get_lines()
+    labels = [line.get_label() for line in lines]
+    ax1.legend(lines, labels, frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2)
+    add_note(fig, "Diagnostic only: K-means uses squared Euclidean distance after standardisation.")
+    fig.subplots_adjust(bottom=0.23)
+    save_figure(fig, output_path)
     plt.close(fig)
 
 
