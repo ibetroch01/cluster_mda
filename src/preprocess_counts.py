@@ -133,14 +133,6 @@ def is_autumn_dst_repeated_hour(van_dt: pd.Series) -> pd.Series:
     return van_dt.dt.normalize().eq(expected_dates) & van_dt.dt.hour.eq(2)
 
 
-def is_spring_dst_75(van_dt: pd.Series, duration_minutes: pd.Series) -> pd.Series:
-    """Return True for 75-minute rows on Brussels spring DST transition dates."""
-    years = sorted(van_dt.dt.year.dropna().unique())
-    transition_dates = {year: brussels_spring_dst_date(int(year)) for year in years}
-    expected_dates = van_dt.dt.year.map(transition_dates)
-    return duration_minutes.eq(75.0) & van_dt.dt.normalize().eq(expected_dates)
-
-
 def load_metadata(raw_dir: Path) -> dict[str, object]:
     """Load sites and directions metadata for audit counts only."""
     result: dict[str, object] = {

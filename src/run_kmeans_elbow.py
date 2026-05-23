@@ -75,7 +75,7 @@ def load_feature_matrix(feature_path, selected_features):
 
     data = pd.read_csv(feature_path)
     if "location_group_id" not in data.columns:
-        raise ValueError("The feature table must include location_group_id for traceability.")
+        raise ValueError("The feature table must include location_group_id for linking outputs.")
 
     forbidden = sorted(set(selected_features) & FORBIDDEN_CLUSTERING_FEATURES)
     if forbidden:

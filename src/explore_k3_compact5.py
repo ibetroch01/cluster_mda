@@ -455,35 +455,6 @@ def plot_transition_heatmap(transition: pd.DataFrame) -> None:
     plt.close(fig)
 
 
-def characterize_broad_split(diff: pd.DataFrame, broad_summary: pd.DataFrame) -> list[str]:
-    """Create cautious text bullets for broad-cluster split."""
-    if diff.empty or len(broad_summary) != 2:
-        return ["De brede k=2-cluster splitst niet in precies twee k=3 subclusters in deze output."]
-    top_rows = diff.head(3)
-    cluster_a = int(top_rows.iloc[0]["cluster_a"])
-    cluster_b = int(top_rows.iloc[0]["cluster_b"])
-    bullets = [
-        f"De brede k=2-cluster splitst in k=3 vooral in cluster_{cluster_a} en cluster_{cluster_b}.",
-        "De grootste verschillen zitten in: "
-        + "; ".join(
-            f"{row.feature} (z-verschil {row.z_centroid_difference_a_minus_b:.2f})"
-            for row in top_rows.itertuples(index=False)
-        )
-        + ".",
-    ]
-    commute_feature = diff.loc[diff["feature"] == "weekday_commute_peak_share"]
-    midday_feature = diff.loc[diff["feature"] == "weekday_midday_share"]
-    if not commute_feature.empty:
-        row = commute_feature.iloc[0]
-        higher = cluster_a if row["z_centroid_difference_a_minus_b"] > 0 else cluster_b
-        bullets.append(f"cluster_{higher} oogt relatief meer commuter-like / regular-use door een hogere weekday commute peak share.")
-    if not midday_feature.empty:
-        row = midday_feature.iloc[0]
-        higher = cluster_a if row["z_centroid_difference_a_minus_b"] > 0 else cluster_b
-        bullets.append(f"cluster_{higher} heeft relatief meer mixed daytime kenmerken door een hogere weekday midday share.")
-    return bullets
-
-
 def run_exploration() -> dict[str, object]:
     """Run the k=3 exploratory workflow."""
     features, k2, groups = load_inputs()
