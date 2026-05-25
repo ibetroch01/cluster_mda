@@ -8,3 +8,7 @@ __pycache__/
 .ruff_cache/
 .matplotlib-cache/
 data/
+
+.vscode/
+data/
+reports/
