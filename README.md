@@ -11,8 +11,6 @@ The final model uses:
 - `StandardScaler`
 - K-means with `k = 2`
 
-The full methodological explanation is in the report/notebook, not in this
-README.
 
 ## Setup
 
@@ -29,7 +27,6 @@ Place the raw AWV files locally in:
 data/raw/
 ```
 
-The `data/`, `.venv/`, `.vscode/`, and `reports/` folders are ignored by Git.
 
 ## Project Structure
 
@@ -71,9 +68,3 @@ Open:
 http://127.0.0.1:8001
 ```
 
-## Main Outputs
-
-- final clusters: `data/processed/final_location_group_clusters_k2_compact5.csv`
-- final cluster summary: `outputs/final_cluster_summary_k2_compact5.csv`
-- final figures and maps: `outputs/`
-- dashboard app: `dashboard/app.py`
