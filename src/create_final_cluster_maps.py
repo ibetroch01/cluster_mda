@@ -39,6 +39,7 @@ COLORS = {
 }
 TILE_SIZE = 256
 TILE_ZOOM = 8
+# Static report maps use public basemap tiles; coordinates are only for display.
 TILE_URL = "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
 TILE_ATTRIBUTION = "Basemap: CartoDB Positron, OpenStreetMap contributors. Coordinates were not clustering features."
 EARTH_RADIUS = 6378137.0
@@ -64,6 +65,7 @@ def ensure_coordinates(clusters: pd.DataFrame, groups: pd.DataFrame) -> pd.DataF
 def label_k2(clusters: pd.DataFrame) -> pd.DataFrame:
     """Assign cautious k=2 map labels."""
     output = clusters.copy()
+    # The cluster with the highest summer/winter ratio is the seasonal group.
     seasonal_cluster = int(output.groupby("cluster_id")["log_summer_winter_ratio"].mean().idxmax())
     output["cluster_label"] = output["cluster_id"].map(
         lambda cluster_id: K2_LABELS["seasonal"] if int(cluster_id) == seasonal_cluster else K2_LABELS["broad"]
@@ -74,6 +76,7 @@ def label_k2(clusters: pd.DataFrame) -> pd.DataFrame:
 def label_k3(clusters: pd.DataFrame) -> pd.DataFrame:
     """Assign cautious exploratory k=3 map labels from compact5 profiles."""
     output = clusters.copy()
+    # k=3 labels are derived from temporal feature profiles, not geography.
     seasonal_cluster = int(output.groupby("k3_cluster_id")["log_summer_winter_ratio"].mean().idxmax())
     remaining = output.loc[output["k3_cluster_id"] != seasonal_cluster]
     commuter_cluster = int(remaining.groupby("k3_cluster_id")["weekday_commute_peak_share"].mean().idxmax())
@@ -117,8 +120,7 @@ def fetch_tile(x_tile: int, y_tile: int, zoom: int) -> Image.Image:
     except (HTTPError, URLError, TimeoutError) as exc:
         raise RuntimeError(
             "Could not download basemap tiles for the static report map. "
-            "Check the internet connection, or use src/create_leaflet_cluster_maps.py "
-            "to create the interactive dashboard map instead."
+            "Check the internet connection, or use the Shiny dashboard map instead."
         ) from exc
 
 
@@ -146,6 +148,7 @@ def basemap_image(bounds: tuple[float, float, float, float], zoom: int) -> Image
         ((x_end - x_start + 1) * TILE_SIZE, (y_end - y_start + 1) * TILE_SIZE),
         "#f8fafc",
     )
+    # Download and stitch all tiles needed for the Flanders bounding box.
     for x_tile in range(x_start, x_end + 1):
         for y_tile in range(y_start, y_end + 1):
             tile = fetch_tile(x_tile, y_tile, zoom)

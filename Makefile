@@ -1,9 +1,9 @@
-.PHONY: all explore clean-data features model-building model-selection results dashboard-assets dashboard-results model dashboard app final-model final-figures k3-exploration
+.PHONY: all explore clean-data features model-building model-selection results model dashboard app final-model final-figures k3-exploration
 
 PYTHON := $(shell if [ -x .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 SHINY := $(shell if [ -x .venv/bin/shiny ]; then echo .venv/bin/shiny; else echo shiny; fi)
 
-all: explore clean-data features model-building model-selection results dashboard-assets
+all: explore clean-data features model-building model-selection results
 
 explore:
 	$(PYTHON) src/inspect_data.py
@@ -32,11 +32,6 @@ results:
 	$(PYTHON) src/create_final_cluster_visualizations.py
 	$(PYTHON) src/create_final_cluster_maps.py
 
-dashboard-assets:
-	$(PYTHON) src/create_leaflet_cluster_maps.py
-
-dashboard-results: results dashboard-assets
-
 dashboard:
 	$(SHINY) run --host 127.0.0.1 --port 8001 dashboard/app.py
 
@@ -47,7 +42,7 @@ model: model-building
 final-model:
 	$(PYTHON) src/fit_final_kmeans_compact5.py
 
-final-figures: results dashboard-assets
+final-figures: results
 
 k3-exploration:
 	$(PYTHON) src/explore_k3_compact5.py

@@ -40,6 +40,7 @@ COMPACT5_FEATURES = [
     "weekend_midday_afternoon_share",
     "log_summer_winter_ratio",
 ]
+# Static result figures all use the same final compact5 feature order.
 K2_COLORS = {
     0: CLUSTER_COLORS["regular"],
     1: CLUSTER_COLORS["seasonal"],
@@ -98,6 +99,8 @@ def plot_feature_profile(clusters: pd.DataFrame) -> None:
     """Plot mean standardized compact5 feature values by cluster."""
     plt, _ = setup_matplotlib()
     z_features = [f"z_{feature}" for feature in COMPACT5_FEATURES]
+    # Standardized means show which features are high or low relative to the
+    # full modelled data set.
     profile = clusters.groupby("cluster_id")[z_features].mean().rename(
         columns={f"z_{feature}": feature for feature in COMPACT5_FEATURES}
     )
@@ -143,6 +146,7 @@ def build_valid_days(counts: pd.DataFrame) -> pd.DataFrame:
     daily["site_interval_coverage_ratio"] = (
         daily["n_site_interval_observations_present"] / daily["expected_site_interval_observations"]
     )
+    # The profile plots use the same valid-day rule as feature engineering.
     daily["valid_day"] = daily["site_interval_coverage_ratio"] >= 0.90
     return daily.loc[daily["valid_day"] & (daily["daily_total"] > 0)].copy()
 
@@ -154,6 +158,8 @@ def location_level_hourly_profiles(
     weekend: bool,
 ) -> pd.DataFrame:
     """Compute location-level hourly shares, then average profiles by cluster."""
+    # Location-level averaging prevents high-volume counters from dominating the
+    # displayed cluster profile.
     valid = valid_days.loc[valid_days["is_weekend"].astype(bool) == weekend, [
         "location_group_id",
         "date",
@@ -227,6 +233,8 @@ def monthly_profile(
         overall_mean_daily_total=("daily_total", "mean"),
     )
     location_month = location_month.merge(location_overall, on="location_group_id", how="left")
+    # Normalize each location by its own overall mean before averaging by
+    # cluster, so this plot shows seasonality rather than volume.
     location_month["normalized_monthly_profile"] = (
         location_month["mean_daily_total_month"] / location_month["overall_mean_daily_total"]
     )
@@ -274,6 +282,7 @@ def plot_pca(clusters: pd.DataFrame) -> None:
     """Plot a PCA projection of the standardized compact5 space."""
     plt, _ = setup_matplotlib()
     z_features = [f"z_{feature}" for feature in COMPACT5_FEATURES]
+    # PCA is only a two-dimensional view of the clustering space.
     pca = PCA(n_components=2, random_state=42)
     coords = pca.fit_transform(clusters[z_features])
     plot_data = clusters[["location_group_id", "cluster_id"]].copy()

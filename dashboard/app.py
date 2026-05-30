@@ -14,6 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 
+# The dashboard is a presentation layer: it reads prepared pipeline outputs only.
 K2_CLUSTERS = DATA_DIR / "final_location_group_clusters_k2_compact5.csv"
 K3_CLUSTERS = DATA_DIR / "location_group_clusters_k3_compact5.csv"
 COUNTS = DATA_DIR / "counts_location_group_2023_2025.parquet"
@@ -92,6 +93,7 @@ def _required_files() -> list[Path]:
 
 
 def _standardize_k2(df: pd.DataFrame) -> pd.DataFrame:
+    # Give the final k=2 table the same column names used by the dashboard views.
     out = df.copy()
     out["model"] = "k=2 final"
     out["cluster_id"] = pd.to_numeric(out["cluster_id"], errors="coerce").astype("Int64")
@@ -107,6 +109,7 @@ def _standardize_k2(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _standardize_k3(df: pd.DataFrame) -> pd.DataFrame:
+    # Align exploratory k=3 outputs with the final k=2 output shape.
     out = df.copy()
     out["model"] = "k=3 exploratory"
     out["cluster_id"] = pd.to_numeric(out["k3_cluster_id"], errors="coerce").astype("Int64")
@@ -139,6 +142,7 @@ def _load_profiles(k2: pd.DataFrame, k3: pd.DataFrame) -> tuple[pd.DataFrame, pd
         ["location_group_id", "date", "daily_total", "day_of_week", "is_weekend", "month"],
     ].copy()
 
+    # Profiles use valid positive days only, matching the feature-engineering logic.
     counts = counts.merge(
         valid_days[["location_group_id", "date", "daily_total"]],
         on=["location_group_id", "date"],
@@ -157,6 +161,8 @@ def _load_profiles(k2: pd.DataFrame, k3: pd.DataFrame) -> tuple[pd.DataFrame, pd
         .sort_values(["location_group_id", "day_type", "hour"])
     )
 
+    # Daily and monthly views are relative to each location group's own mean, so
+    # large counters do not dominate the comparison.
     group_mean = valid_days.groupby("location_group_id")["daily_total"].transform("mean")
     valid_days["profile_value"] = valid_days["daily_total"] / group_mean.replace(0, np.nan)
 
@@ -185,6 +191,8 @@ def _cluster_expectations(
 ) -> dict[str, pd.DataFrame]:
     assignments = model_df[["location_group_id", "cluster_label"]].copy()
 
+    # The dotted expectation lines are cluster averages of location-level
+    # relative profiles, not absolute-volume averages.
     hourly = (
         hourly_profile.merge(assignments, on="location_group_id", how="inner")
         .groupby(["cluster_label", "day_type", "hour"], as_index=False)
@@ -225,6 +233,7 @@ def _load_data():
     k3 = _standardize_k3(_read_csv(K3_CLUSTERS))
     quality = _read_csv(QUALITY_SUMMARY)
 
+    # Numeric conversion happens once during load so plotting code stays simple.
     for df in (k2, k3):
         for feature in COMPACT5:
             df[feature] = pd.to_numeric(df[feature], errors="coerce")
@@ -376,6 +385,7 @@ def _profile_plot(
 
 
 app_ui = ui.page_navbar(
+    # Sheet 1: interactive map for final k=2 and exploratory k=3.
     ui.nav_panel(
         "Map",
         _ready_message(),
@@ -399,6 +409,7 @@ app_ui = ui.page_navbar(
             ),
         ),
     ),
+    # Sheet 2: one selected counter compared with its cluster expectation.
     ui.nav_panel(
         "Teller overview",
         _ready_message(),
@@ -425,6 +436,7 @@ app_ui = ui.page_navbar(
             ),
         ),
     ),
+    # Sheet 3: interactive feature view for explaining cluster separation.
     ui.nav_panel(
         "Feature explorer",
         _ready_message(),
@@ -517,6 +529,8 @@ def server(input, output, session):
     @reactive.effect
     def _update_map_cluster_filter() -> None:
         if DATA.ready:
+            # Cluster choices depend on the selected model, so update them
+            # reactively when the user switches between k=2 and k=3.
             ui.update_select("map_cluster", choices=_cluster_filter_choices(input.map_model()))
 
     @render.ui
@@ -529,6 +543,7 @@ def server(input, output, session):
         if selected_cluster and selected_cluster != "all":
             df = df.loc[df["cluster_label"] == selected_cluster]
 
+        # Coordinates are used only to display the already-computed clusters.
         fig = px.scatter_mapbox(
             df,
             lat="latitude",
@@ -567,6 +582,7 @@ def server(input, output, session):
         quality = DATA.quality.loc[DATA.quality["location_group_id"] == row["location_group_id"]]
         quality_row = quality.iloc[0] if not quality.empty else pd.Series(dtype=object)
 
+        # The metric cards combine cluster output and data-quality diagnostics.
         def metric(label: str, value: object) -> ui.Tag:
             return ui.div(
                 ui.div(label, class_="metric-label"),
@@ -600,6 +616,7 @@ def server(input, output, session):
         row = _selected_location_row(input.location_group(), input.profile_model())
         if row is None:
             return _empty_fig("No location group selected.")
+        # Solid line is the selected counter; dotted line is the cluster average.
         return _profile_plot(
             DATA.hourly_profile,
             DATA.cluster_profiles[input.profile_model()]["hourly"],
@@ -681,6 +698,7 @@ def server(input, output, session):
             return _empty_fig("No data loaded.")
         df = _model_df(DATA, input.feature_model()).copy()
         z_cols = [f"z_{feature}" for feature in COMPACT5]
+        # Standardized cluster means make high/low temporal tendencies visible.
         profile = df.groupby("cluster_label", as_index=False)[z_cols].mean()
         long = profile.melt("cluster_label", var_name="feature", value_name="mean_z")
         long["feature"] = long["feature"].str.removeprefix("z_").map(FEATURE_LABELS)

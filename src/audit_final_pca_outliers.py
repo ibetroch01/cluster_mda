@@ -55,6 +55,8 @@ def compute_pca(clusters: pd.DataFrame) -> tuple[pd.DataFrame, list[float]]:
     pca = PCA(n_components=2, random_state=42)
     coords = pca.fit_transform(clusters[z_features])
     output = clusters.copy()
+    # PCA coordinates are for auditing/visualisation only; KMeans was fitted in
+    # the full five-dimensional standardized compact5 space.
     output["pc1"] = coords[:, 0]
     output["pc2"] = coords[:, 1]
     output["abs_pc2"] = output["pc2"].abs()
@@ -94,6 +96,8 @@ def quality_flag(row: pd.Series) -> tuple[str, str]:
 
 def build_audit(clusters: pd.DataFrame, quality: pd.DataFrame, groups: pd.DataFrame) -> pd.DataFrame:
     """Build outlier audit table for top |PC2| and centroid-distance observations."""
+    # Two outlier views are combined: unusual PCA position and large KMeans
+    # centroid distance.
     top_pc2_ids = set(clusters.nlargest(5, "abs_pc2")["location_group_id"])
     top_distance_ids = set(clusters.nlargest(5, "distance_to_assigned_centroid")["location_group_id"])
     audit_ids = top_pc2_ids | top_distance_ids

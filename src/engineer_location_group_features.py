@@ -22,8 +22,11 @@ DEFAULT_ELIGIBLE_INPUT = PROJECT_ROOT / "data" / "processed" / "eligible_locatio
 DEFAULT_LOCATION_GROUPS_INPUT = PROJECT_ROOT / "data" / "processed" / "location_groups.csv"
 DEFAULT_FEATURE_OUTPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_candidate.csv"
 DEFAULT_REPORT_OUTPUT = PROJECT_ROOT / "outputs" / "location_group_feature_engineering_report.json"
+# A temporal share is used only when the relevant time window is well observed.
 WINDOW_COVERAGE_THRESHOLD = 0.90
 
+# Candidate features describe pattern shape. They are checked later before any
+# KMeans matrix is built.
 SELECTED_KMEANS_FEATURES = [
     "log_weekend_weekday_ratio",
     "weekday_morning_peak_share",
@@ -139,6 +142,7 @@ def window_daily_shares(
         daily[output_column] = np.nan
         daily[f"{output_column}_coverage_ok"] = False
         return daily[keys + [output_column, f"{output_column}_coverage_ok"]]
+    # Shares are calculated per day first so high-volume days do not dominate.
     grouped = subset.groupby(keys, as_index=False, observed=True).agg(
         window_count=("count", "sum"),
         observed_site_intervals=("n_sites_present", "sum"),
@@ -150,6 +154,8 @@ def window_daily_shares(
     output = daily.merge(grouped, on=keys, how="left")
     output["coverage_ratio"] = output["coverage_ratio"].fillna(0.0)
     output["window_count"] = output["window_count"].fillna(0.0)
+    # If a window is poorly observed, leave the feature missing instead of
+    # turning missing observations into artificial zeros.
     output[f"{output_column}_coverage_ok"] = output["coverage_ratio"] >= WINDOW_COVERAGE_THRESHOLD
     output[output_column] = np.where(
         output[f"{output_column}_coverage_ok"],
@@ -170,6 +176,8 @@ def rolling_2h_peak_daily_shares(counts: pd.DataFrame, valid_positive_days: pd.D
     count_pivot = counts.pivot_table(index=keys, columns="quarter_index", values="count", aggfunc="sum", fill_value=0.0, sort=False)
     present_pivot = counts.pivot_table(index=keys, columns="quarter_index", values="n_sites_present", aggfunc="sum", fill_value=0.0, sort=False)
     expected_pivot = counts.pivot_table(index=keys, columns="quarter_index", values="expected_present", aggfunc="max", fill_value=0.0, sort=False)
+    # Reindex to all 96 quarter-hours so the rolling two-hour window always has
+    # the same meaning across days.
     for quarter in range(96):
         if quarter not in count_pivot.columns:
             count_pivot[quarter] = 0.0
@@ -265,6 +273,8 @@ def build_location_features(
     group_meta = location_groups.set_index("location_group_id") if not location_groups.empty else pd.DataFrame()
     records: list[dict[str, object]] = []
     for location_group_id in eligible_groups:
+        # Each record is one final modelling row: one location group over the
+        # whole selected period.
         days = valid_positive_days.loc[valid_positive_days["location_group_id"] == location_group_id]
         features = day_features.loc[day_features["location_group_id"] == location_group_id]
         weekdays = days.loc[~days["is_weekend"]]
@@ -278,6 +288,8 @@ def build_location_features(
         diag = diagnostics.loc[location_group_id]
         record = {
             "location_group_id": location_group_id,
+            # Log ratios compare relative temporal patterns without using raw
+            # total volume as a clustering driver.
             "log_weekend_weekday_ratio": safe_log_ratio(weekend_mean, weekday_mean),
             "weekday_morning_peak_share": mean_or_nan(features["weekday_morning_peak_share_day"]),
             "weekday_evening_peak_share": mean_or_nan(features["weekday_evening_peak_share_day"]),
@@ -321,6 +333,7 @@ def build_location_features(
 
 def assert_valid_kmeans_features(feature_columns: list[str], feature_table: pd.DataFrame) -> None:
     """Prevent forbidden columns or missing/non-numeric columns from entering KMeans matrix."""
+    # This guard enforces the core methodological rule of the project.
     forbidden = sorted(set(feature_columns) & FORBIDDEN_CLUSTERING_FEATURES)
     if forbidden:
         raise AssertionError(f"Forbidden columns selected for KMeans: {', '.join(forbidden)}")

@@ -35,6 +35,8 @@ DEFAULT_REPORT_OUTPUT = PROJECT_ROOT / "outputs" / "interval_diagnostics_report.
 MONTHLY_COUNT_PATTERN = re.compile(r"^data-(\d{4})-(\d{2})\.csv$", re.IGNORECASE)
 BRUSSELS_TZ = ZoneInfo("Europe/Brussels")
 REQUIRED_COLUMNS = ["site_id", "richting", "type", "van", "tot", "aantal"]
+# Non-15-minute rows are listed explicitly because they drive the later cleaning
+# decision about DST rows versus anomalous timing.
 NON_15_COLUMNS = [
     "date",
     "year",
@@ -129,6 +131,8 @@ def load_fietsers_counts(path: Path) -> pd.DataFrame:
 def add_interval_status(data: pd.DataFrame) -> pd.DataFrame:
     """Add interval_status according to diagnostic duration rules."""
     data = data.copy()
+    # Start from the strictest status and only promote rows when the duration
+    # matches the known normal or DST pattern.
     data["interval_status"] = "anomalous_duration"
     data.loc[data["duration_minutes"].eq(15.0), "interval_status"] = "normal_15min"
     valid_van = data["van_dt"].notna() & data["duration_minutes"].notna()

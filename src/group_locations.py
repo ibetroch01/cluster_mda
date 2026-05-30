@@ -28,6 +28,8 @@ DEFAULT_MAPPING_OUTPUT = PROJECT_ROOT / "data" / "processed" / "site_to_location
 DEFAULT_GROUPS_OUTPUT = PROJECT_ROOT / "data" / "processed" / "location_groups.csv"
 DEFAULT_COUNTS_OUTPUT = PROJECT_ROOT / "data" / "processed" / "counts_location_group_2023_2025.parquet"
 DEFAULT_REPORT_OUTPUT = PROJECT_ROOT / "outputs" / "location_grouping_report.json"
+# Nearby counters are treated as the same counting location before feature
+# engineering, so profiles are based on locations rather than individual devices.
 DISTANCE_THRESHOLD_METERS = 100.0
 
 
@@ -60,6 +62,7 @@ def load_sites(sites_path: Path) -> pd.DataFrame:
 
 def project_sites(sites: pd.DataFrame) -> pd.DataFrame:
     """Project longitude/latitude from EPSG:4326 to EPSG:31370."""
+    # Distances must be computed in metres, not in raw longitude/latitude degrees.
     transformer = Transformer.from_crs("EPSG:4326", "EPSG:31370", always_xy=True)
     x, y = transformer.transform(sites["long"].to_numpy(), sites["lat"].to_numpy())
     projected = sites.copy()
@@ -78,6 +81,8 @@ def complete_linkage_groups(projected_sites: pd.DataFrame, threshold_meters: flo
     else:
         coordinates = sites[["x_31370", "y_31370"]].to_numpy(dtype="float64")
         condensed = pdist(coordinates, metric="euclidean")
+        # Complete linkage avoids chaining: all sites in a group must stay within
+        # the maximum distance threshold from one another.
         tree = linkage(condensed, method="complete")
         sites["_cluster"] = fcluster(tree, t=threshold_meters, criterion="distance")
 
@@ -159,6 +164,8 @@ def aggregate_location_counts(counts: pd.DataFrame, mapping: pd.DataFrame) -> tu
     counts_with_group["site_present"] = 1
     counts_with_group["has_dst_spring_75min"] = counts_with_group["has_dst_spring_75min"].fillna(False).astype(bool)
 
+    # Counts are summed, but coverage keeps track of whether all expected sites
+    # contributed to each interval.
     aggregated = (
         counts_with_group.groupby(["location_group_id", "interval_start"], as_index=False, observed=True)
         .agg(
@@ -172,6 +179,8 @@ def aggregate_location_counts(counts: pd.DataFrame, mapping: pd.DataFrame) -> tu
         .sort_values(["location_group_id", "interval_start"])
         .reset_index(drop=True)
     )
+    # Partial coverage is kept as diagnostics instead of filling missing sites
+    # with zero counts.
     aggregated["interval_full_coverage"] = aggregated["n_sites_present"] == aggregated["n_sites_expected"]
     aggregated["interval_coverage_ratio"] = aggregated["n_sites_present"] / aggregated["n_sites_expected"]
     aggregated["date"] = aggregated["interval_start"].dt.date.astype("string")

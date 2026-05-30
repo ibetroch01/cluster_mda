@@ -20,6 +20,8 @@ DEFAULT_SUMMARY_OUTPUT = PROJECT_ROOT / "data" / "processed" / "location_group_q
 DEFAULT_ELIGIBLE_OUTPUT = PROJECT_ROOT / "data" / "processed" / "eligible_location_groups.csv"
 DEFAULT_REPORT_OUTPUT = PROJECT_ROOT / "outputs" / "location_group_quality_report.json"
 NORMAL_DAY_INTERVALS = 96
+# A day can miss a few intervals because of DST or small gaps, but it still
+# needs high site-interval coverage to be used for feature engineering.
 VALID_DAY_COVERAGE_THRESHOLD = 0.90
 QUALITY_COLUMNS = [
     "n_valid_days",
@@ -118,6 +120,8 @@ def build_location_group_day_quality(
         .reset_index(drop=True)
     )
     day["expected_site_interval_observations"] = NORMAL_DAY_INTERVALS * day["n_sites_expected"]
+    # Coverage is based on site-interval observations, so a two-site group needs
+    # twice as many observations as a one-site group.
     day["site_interval_coverage_ratio"] = [
         coverage_ratio(observed, expected)
         for observed, expected in zip(day["n_site_interval_observations_present"], day["expected_site_interval_observations"])
@@ -163,6 +167,8 @@ def build_window_coverage_summary(counts: pd.DataFrame) -> pd.DataFrame:
     """Build location-level coverage ratios for key feature-engineering windows."""
     weekday = ~counts["is_weekend"].astype(bool)
     weekend = counts["is_weekend"].astype(bool)
+    # These windows match the later temporal features and help audit whether a
+    # feature was computed from sufficiently observed periods.
     windows = [
         window_coverage(counts, counts["hour"].between(7, 9), "morning_07_09_coverage_ratio"),
         window_coverage(counts, counts["hour"].between(16, 18), "evening_16_18_coverage_ratio"),
@@ -277,6 +283,7 @@ def apply_candidate_thresholds(summary: pd.DataFrame, thresholds: LocationQualit
     """Add threshold pass/fail columns and final candidate eligibility."""
     threshold_map = asdict(thresholds)
     eligible = summary.copy()
+    # Eligibility is conservative: a group must pass every quality threshold.
     checks = {
         "passes_min_valid_days": ("n_valid_days", threshold_map["min_valid_days"]),
         "passes_min_valid_weekdays": ("n_valid_weekdays", threshold_map["min_valid_weekdays"]),

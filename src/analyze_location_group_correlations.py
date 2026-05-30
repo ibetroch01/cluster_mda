@@ -22,6 +22,7 @@ DEFAULT_SELECTED_JSON_OUTPUT = PROJECT_ROOT / "outputs" / "selected_features.jso
 DEFAULT_SELECTED_TABLE_OUTPUT = PROJECT_ROOT / "data" / "processed" / "location_group_features_selected.csv"
 
 CORRELATION_THRESHOLD = 0.85
+# Near-zero night share is treated as low-information for this data set.
 NIGHT_SHARE_NEAR_ZERO_THRESHOLD = 0.01
 NIGHT_SHARE_NEAR_ZERO_SHARE_THRESHOLD = 0.80
 
@@ -142,6 +143,8 @@ def recommend_features(
 ) -> tuple[pd.DataFrame, list[str], dict[str, object]]:
     """Create composite features where useful and recommend an unscaled feature list."""
     output = features.copy()
+    # Start from the interpretable core candidates and only simplify when the
+    # correlation diagnostics show redundancy.
     selected = [
         "log_weekend_weekday_ratio",
         "weekday_morning_peak_share",
@@ -165,6 +168,8 @@ def recommend_features(
         "weekday_evening_peak_share",
     )
     if is_strongly_correlated(pearson, spearman, "weekday_morning_peak_share", "weekday_evening_peak_share"):
+        # Combining both peaks keeps the commute signal but avoids double-counting
+        # two strongly related indicators.
         output["weekday_commute_peak_share"] = (
             output["weekday_morning_peak_share"] + output["weekday_evening_peak_share"]
         )
@@ -209,6 +214,8 @@ def recommend_features(
         for value in peak_concentration_correlations.values()
     )
     if peak_concentration_is_redundant and "weekday_peak_concentration_2h" in selected:
+        # Peak concentration overlaps with the commute signal, so the simpler
+        # commute feature is preferred.
         selected.remove("weekday_peak_concentration_2h")
         rationale["decisions"].append(
             {
@@ -254,6 +261,7 @@ def recommend_features(
             "log_summer_winter_ratio",
         )
         if is_strongly_correlated(pearson, spearman, "daily_variability_cv", "log_summer_winter_ratio"):
+            # Seasonality is easier to interpret than a broad variability score.
             rationale["decisions"].append(
                 {
                     "decision": "dropped_daily_variability_cv",
@@ -294,6 +302,8 @@ def run_correlation_analysis(
     if clean.empty:
         raise ValueError("No rows remain after removing missing core candidate features.")
 
+    # Correlations are computed before scaling; scaling happens only in KMeans
+    # scripts so this step stays a feature-selection diagnostic.
     candidate_columns = [column for column in ALL_CANDIDATE_FEATURES if column in clean.columns]
     pearson, spearman = calculate_correlations(clean, candidate_columns)
     flags = build_correlation_flags(pearson, spearman)

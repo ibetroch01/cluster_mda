@@ -50,6 +50,7 @@ FORBIDDEN_CLUSTERING_FEATURES = {
 }
 
 FEATURE_SETS = {
+    # full9 and core7 are robustness checks; compact5 is the final feature set.
     "full9": [
         "log_weekend_weekday_ratio",
         "weekday_morning_peak_share",
@@ -103,6 +104,7 @@ def load_features(path: Path) -> pd.DataFrame:
 
 def validate_feature_set(features: pd.DataFrame, feature_set_name: str, columns: list[str]) -> pd.DataFrame:
     """Validate a feature set and return a complete numeric matrix."""
+    # Keep the same forbidden-feature rule for every sensitivity run.
     forbidden = sorted(set(columns) & FORBIDDEN_CLUSTERING_FEATURES)
     if forbidden:
         raise AssertionError(
@@ -122,12 +124,14 @@ def aligned_rows(features: pd.DataFrame, matrix: pd.DataFrame) -> pd.DataFrame:
 
 def run_elbow(feature_set_name: str, matrix: pd.DataFrame) -> pd.DataFrame:
     """Run KMeans k=1..10 for one feature set."""
+    # Each feature set is scaled separately because it has its own feature space.
     scaler = StandardScaler()
     scaled = scaler.fit_transform(matrix)
     records: list[dict[str, object]] = []
     previous_inertia: float | None = None
     max_k = min(10, len(matrix))
     for k in range(1, max_k + 1):
+        # The same KMeans parameters are used for every feature set and k.
         model = KMeans(n_clusters=k, **KMEANS_PARAMETERS)
         labels = model.fit_predict(scaled)
         inertia = float(model.inertia_)
@@ -160,6 +164,8 @@ def fit_candidate_models(
     selected_features: list[str],
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Fit k=2 and k=3 and return model comparison plus cluster profiles."""
+    # Candidate final models are saved for comparison; this script does not
+    # replace the final compact5 k=2 model.
     scaler = StandardScaler()
     scaled = scaler.fit_transform(matrix)
     z_columns = [f"z_{feature}" for feature in selected_features]

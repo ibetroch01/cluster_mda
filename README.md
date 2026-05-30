@@ -57,7 +57,6 @@ make features
 make model-building
 make model-selection
 make results
-make dashboard-assets
 ```
 
 ## Dashboard

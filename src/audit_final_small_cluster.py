@@ -49,11 +49,15 @@ def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFram
 
 def identify_small_cluster(clusters: pd.DataFrame) -> int:
     """Identify the smallest final k=2 cluster."""
+    # In the final result this is the seven-location seasonal/recreational-like
+    # group that needs extra quality checking.
     return int(clusters["cluster_id"].value_counts().sort_values().index[0])
 
 
 def quality_flag(row: pd.Series) -> tuple[str, str]:
     """Assign transparent quality flag based on candidate threshold weaknesses."""
+    # The audit does not relabel clusters; it only checks whether weak coverage
+    # could explain the small cluster.
     checks = [
         ("n_valid_days < 365", row["n_valid_days"] < 365),
         ("n_valid_weekdays < 240", row["n_valid_weekdays"] < 240),
@@ -83,6 +87,8 @@ def build_audit_table(
 
     if "weekday_commute_peak_share" not in features.columns:
         features = features.copy()
+        # Recreate compact5's commute feature if only separate morning/evening
+        # peak shares are available.
         features["weekday_commute_peak_share"] = (
             pd.to_numeric(features["weekday_morning_peak_share"], errors="coerce")
             + pd.to_numeric(features["weekday_evening_peak_share"], errors="coerce")

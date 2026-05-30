@@ -30,6 +30,8 @@ DIAGNOSTICS_OUTPUT = PROJECT_ROOT / "outputs" / "kmeans_elbow_diagnostics.json"
 PLOT_OUTPUT = PROJECT_ROOT / "outputs" / "kmeans_elbow_plot.png"
 SCALER_OUTPUT = PROJECT_ROOT / "outputs" / "scaler.joblib"
 
+# These variables are useful context, but including them would make clusters
+# reflect size, geography or quality instead of temporal usage shape.
 FORBIDDEN_CLUSTERING_FEATURES = {
     "total_count",
     "avg_daily_count",
@@ -81,6 +83,7 @@ def load_feature_matrix(feature_path, selected_features):
     if forbidden:
         raise AssertionError(f"Forbidden variables included in clustering features: {', '.join(forbidden)}")
 
+    # The elbow diagnostic should only receive complete numeric feature rows.
     missing = sorted(set(selected_features) - set(data.columns))
     if missing:
         raise ValueError(f"Selected features missing from table: {', '.join(missing)}")
@@ -105,6 +108,8 @@ def run_elbow(scaled_features, max_k=10):
     previous_inertia = None
 
     for k in range(1, max_k + 1):
+        # KMeans is refit for each k with the same settings so inertia and
+        # silhouette diagnostics are comparable.
         model = KMeans(n_clusters=k, **KMEANS_SETTINGS)
         labels = model.fit_predict(scaled_features)
         inertia = float(model.inertia_)
@@ -219,6 +224,8 @@ def run_diagnostics(feature_input=FEATURE_INPUT, selected_features_input=SELECTE
     selected_features = load_selected_features(selected_features_input)
     feature_table, matrix = load_feature_matrix(feature_input, selected_features)
 
+    # StandardScaler puts all selected features on the same scale before
+    # squared Euclidean KMeans distances are computed.
     scaler = StandardScaler()
     scaled = scaler.fit_transform(matrix)
     results = run_elbow(scaled)

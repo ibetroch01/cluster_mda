@@ -32,6 +32,7 @@ from src.inspect_data import (  # noqa: E402
 
 START_DATE = pd.Timestamp("2023-01-01")
 END_DATE = pd.Timestamp("2026-01-01")
+# These are the only interval types allowed into the main processed time series.
 VALID_INTERVAL_STATUSES = {"normal_15min", "dst_spring_75min"}
 VALID_MINUTES = {0, 15, 30, 45}
 BRUSSELS_TZ = ZoneInfo("Europe/Brussels")
@@ -197,15 +198,19 @@ def load_count_file(path: Path) -> pd.DataFrame:
 def normalize_and_filter_counts(data: pd.DataFrame) -> pd.DataFrame:
     """Parse fields and keep requested FIETSERS rows in the selected date window."""
     data = data.copy()
+    # Parse first, then filter. This avoids string comparisons on timestamps.
     data["van_dt"] = pd.to_datetime(data["van"], errors="coerce")
     data["tot_dt"] = pd.to_datetime(data["tot"], errors="coerce")
     data["site_id"] = pd.to_numeric(data["site_id"], errors="coerce").astype("Int64")
     data["richting"] = data["richting"].astype("string").str.strip()
     data["aantal"] = pd.to_numeric(data["aantal"], errors="coerce")
     type_text = data["type"].astype("string").str.strip().str.casefold()
+    # Only bicycle rows in the study window are part of this project.
     mask = data["van_dt"].ge(START_DATE) & data["van_dt"].lt(END_DATE) & type_text.eq("fietsers")
     data = data.loc[mask].copy()
     data["duration_minutes"] = (data["tot_dt"] - data["van_dt"]).dt.total_seconds() / 60.0
+    # Keep DST spring rows as one measurement interval; do not split or scale
+    # their counts because the raw row is the observed measurement.
     data["interval_status"] = "anomalous_duration"
     data.loc[data["duration_minutes"].eq(15.0), "interval_status"] = "normal_15min"
     data.loc[data["duration_minutes"].eq(75.0), "interval_status"] = "dst_spring_75min"
@@ -249,6 +254,8 @@ def aggregate_duplicate_subset(data: pd.DataFrame, key_columns: list[str], dupli
             key_values = (key_values,)
         record = dict(zip(key_columns, key_values))
         van_dt = pd.to_datetime(group["van_dt"], errors="coerce")
+        # Repeated local timestamps around the autumn clock change are expected;
+        # duplicates outside that window are more suspicious.
         dst_mask = is_autumn_dst_repeated_hour(van_dt) if van_dt.notna().any() else pd.Series(False, index=group.index)
         dst_status = "likely_dst_repeated_hour" if bool(dst_mask.all()) and len(group) > 1 else "suspicious_duplicate"
         record.update(
@@ -296,6 +303,7 @@ def aggregate_site_level(valid_rows: pd.DataFrame) -> pd.DataFrame:
     """Aggregate over directions at original site_id and interval_start."""
     rows = valid_rows.copy()
     rows["has_dst_spring_75min"] = rows["interval_status"].eq("dst_spring_75min")
+    # Direction counts are summed only after row-level warnings are separated.
     grouped = rows.groupby(["site_id", "interval_start"], as_index=False, observed=True, dropna=False)
     output = grouped.agg(
         count=("aantal", "sum"),

@@ -5,6 +5,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 CLUSTER_COLORS = {
+    # Shared colors keep report figures, maps and dashboard interpretation aligned.
     "regular": "#3B6EA8",
     "seasonal": "#E6862E",
     "mixed": "#6BB6A8",
@@ -38,6 +39,8 @@ def setup_matplotlib():
     """Import matplotlib and apply one clean academic style."""
     import os
 
+    # Keep matplotlib cache inside the project so figure scripts work in local
+    # environments without writing hidden files elsewhere.
     os.environ.setdefault("MPLCONFIGDIR", str(PROJECT_ROOT / ".matplotlib-cache"))
     import matplotlib
 

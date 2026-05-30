@@ -46,6 +46,7 @@ COMPACT5_FEATURES = [
     "log_summer_winter_ratio",
 ]
 KMEANS_PARAMETERS = {
+    # k=3 is exploratory only; the final model remains compact5 with k=2.
     "n_clusters": 3,
     "init": "k-means++",
     "n_init": 100,
@@ -93,6 +94,8 @@ def create_compact5(features: pd.DataFrame) -> pd.DataFrame:
     output["weekday_commute_peak_share"] = (
         output["weekday_morning_peak_share"] + output["weekday_evening_peak_share"]
     )
+    # Use the same complete-case compact5 matrix as the final k=2 model so the
+    # comparison is fair.
     output[COMPACT5_FEATURES] = output[COMPACT5_FEATURES].replace([np.inf, -np.inf], np.nan)
     return output.dropna(subset=COMPACT5_FEATURES).copy()
 
@@ -100,6 +103,8 @@ def create_compact5(features: pd.DataFrame) -> pd.DataFrame:
 def fit_k3(compact: pd.DataFrame, groups: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, KMeans]:
     """Fit global k=3 KMeans on standardized compact5 features."""
     matrix = compact[COMPACT5_FEATURES].apply(pd.to_numeric, errors="coerce")
+    # Standardization is repeated here because this script fits a separate
+    # exploratory model.
     scaler = StandardScaler()
     scaled = scaler.fit_transform(matrix)
     model = KMeans(**KMEANS_PARAMETERS)
@@ -164,6 +169,8 @@ def build_k3_summary(assignments: pd.DataFrame, overall_silhouette: float, inert
 
 def compare_k2_k3(k2: pd.DataFrame, k3: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, object], pd.DataFrame]:
     """Build transition table and identify stable small-cluster overlap."""
+    # The transition table shows whether k=3 preserves the small k=2 cluster
+    # and how it splits the broad k=2 cluster.
     merged = k3.merge(
         k2[["location_group_id", "cluster_id", "cluster_name"]],
         on="location_group_id",
@@ -245,6 +252,7 @@ def build_broad_feature_differences(broad_summary: pd.DataFrame, merged: pd.Data
     """Compute direct feature differences between two broad-cluster subclusters."""
     if len(broad_summary) != 2:
         return pd.DataFrame()
+    # Differences are reported in raw and standardized units for interpretation.
     cluster_a, cluster_b = broad_summary["k3_cluster_id"].tolist()
     rows_a = merged.loc[(merged["k2_cluster_id"] == broad_k2_id) & (merged["k3_cluster_id"] == cluster_a)]
     rows_b = merged.loc[(merged["k2_cluster_id"] == broad_k2_id) & (merged["k3_cluster_id"] == cluster_b)]

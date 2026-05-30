@@ -4,8 +4,6 @@ version = "0.1.0"
 description = "Temporal clustering of AWV bicycle count location groups in Flanders."
 requires-python = ">=3.11"
 dependencies = [
-  "branca",
-  "folium",
   "joblib",
   "matplotlib",
   "numpy",

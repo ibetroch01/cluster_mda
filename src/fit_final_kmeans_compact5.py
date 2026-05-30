@@ -36,6 +36,7 @@ COMPACT5_FEATURES = [
     "log_summer_winter_ratio",
 ]
 
+# These source columns are needed to recreate compact5 from the candidate table.
 COMPACT5_SOURCE_COLUMNS = [
     "location_group_id",
     "log_weekend_weekday_ratio",
@@ -105,6 +106,8 @@ def make_compact5(features):
     data["weekday_commute_peak_share"] = (
         data["weekday_morning_peak_share"] + data["weekday_evening_peak_share"]
     )
+    # Missing or infinite values are removed only after all compact5 features are
+    # constructed, so every model row has a complete five-dimensional profile.
     data[COMPACT5_FEATURES] = data[COMPACT5_FEATURES].replace([np.inf, -np.inf], np.nan)
     data = data.dropna(subset=COMPACT5_FEATURES).copy()
 
@@ -112,6 +115,7 @@ def make_compact5(features):
 
 
 def get_feature_matrix(compact):
+    # This is the final defensive check before fitting the main model.
     forbidden = sorted(set(COMPACT5_FEATURES) & FORBIDDEN_CLUSTERING_FEATURES)
     if forbidden:
         raise AssertionError(f"Forbidden clustering features used: {', '.join(forbidden)}")
@@ -233,9 +237,12 @@ def run_final_model(feature_input=FEATURE_INPUT, location_groups_input=LOCATION_
     compact = make_compact5(features)
     matrix = get_feature_matrix(compact)
 
+    # KMeans is fitted on standardized compact5 values, not on raw counts or
+    # metadata.
     scaler = StandardScaler()
     scaled = scaler.fit_transform(matrix)
 
+    # k=2 is the final model choice documented in the report.
     model = KMeans(**KMEANS_SETTINGS)
     labels = model.fit_predict(scaled)
 

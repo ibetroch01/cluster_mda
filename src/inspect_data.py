@@ -23,6 +23,8 @@ DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "raw"
 LEGACY_RAW_DIR = PROJECT_ROOT / "data" / "awv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "outputs" / "data_schema_summary.json"
 
+# Raw AWV files do not always arrive with perfectly consistent headers, so the
+# exploration step detects schemas instead of assuming them.
 COUNT_FILE_PATTERN = re.compile(r"^data-\d{4}-\d{2}\.csv$", re.IGNORECASE)
 EXPECTED_COLUMNS: dict[str, list[str]] = {
     "counts": ["site_id", "richting", "type", "van", "tot", "aantal"],
@@ -51,6 +53,8 @@ class CsvSchema:
 
 def normalize_column_name(value: object, index: int | None = None) -> str:
     """Normalize a source column name into a stable snake_case identifier."""
+    # A single naming convention makes the later scripts independent of small
+    # CSV header differences such as accents, spaces or capital letters.
     if pd.isna(value):
         text = ""
     else:
@@ -145,6 +149,8 @@ def detect_schema(path: Path, raw_dir: Path) -> CsvSchema:
     )
     expected = set(EXPECTED_COLUMNS.get(file_type, []))
     n_matches = len(set(normalized_first_row) & expected)
+    # Some AWV files are headerless; a row is treated as a header only when it
+    # matches enough expected columns for that file type.
     header_present = bool(expected and n_matches >= HEADER_MATCH_MINIMUM.get(file_type, 2))
 
     notes: list[str] = []
